@@ -77,6 +77,8 @@ public class SimpleMatch implements Comparable<SimpleMatch> {
                     if (settings.overwriteTags.contains(refTag.getKey())) {
                         tagCollection.removeByKey(refTag.getKey());
                         tagCollection.add(refTag);
+                    } else if (settings.forceKeepTags.contains(refTag.getKey())) {
+                        // do nothing if we want to actually preserve the subject value
                     } else if (settings.mergeTags.contains(refTag.getKey()) || (referenceObject.getId() > 0)) {
                         tagCollection.add(refTag);
                     }

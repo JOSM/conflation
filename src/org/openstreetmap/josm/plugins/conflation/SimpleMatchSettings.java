@@ -44,6 +44,11 @@ public class SimpleMatchSettings {
      */
     public Collection<String> overwriteTags;
 
+    /**
+     * List of tags to keep without confirmation during conflation.
+     */
+    public Collection<String> forceKeepTags;
+
 
     /**
      * A Collection that always answer true when asked if it contains any object (except for the removed items!).

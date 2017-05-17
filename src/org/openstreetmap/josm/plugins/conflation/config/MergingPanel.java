@@ -27,7 +27,7 @@ import org.openstreetmap.josm.plugins.conflation.SimpleMatchSettings;
  * Panel to configure merging options (replace geometry, merge tags list).
  */
 public class MergingPanel extends JPanel {
-    
+
     private JCheckBox replaceGeometryCheckBox;
     private JCheckBox mergeTagsCheckBox;
     private JCheckBox mergeAllCheckBox;
@@ -36,13 +36,15 @@ public class MergingPanel extends JPanel {
     private JLabel mergeTagsExceptLabel;
     private JCheckBox overwriteTagsCheckbox; // may be null
     private DefaultPromptTextField overwriteTagsField; // may be null
+    private JLabel forceKeepTagsLabel; // may be null
+    private DefaultPromptTextField forceKeepTagsField; // may be null
     private AutoCompletionList referenceTagsAutoCompletionList;
 
     public MergingPanel(AutoCompletionList referenceKeysAutocompletionList, Preferences pref) {
         this.referenceTagsAutoCompletionList = referenceKeysAutocompletionList;
         this.initComponents();
     }
-    
+
     private void initComponents() {
         replaceGeometryCheckBox = new JCheckBox(tr("Replace Geometry"));
         mergeTagsCheckBox = new JCheckBox(tr("Merge Tags"));
@@ -59,10 +61,17 @@ public class MergingPanel extends JPanel {
             overwriteTagsField = new DefaultPromptTextField(20, tr("none"));
             overwriteTagsField.setToolTipText(tr("List of tags to overwrite on conflict using reference layer without confirmation"));
             overwriteTagsField.setAutoCompletionList(referenceTagsAutoCompletionList);
+            forceKeepTagsLabel = new JLabel(tr("and keep"));
+            forceKeepTagsField = new DefaultPromptTextField(20, tr("none"));
+            forceKeepTagsField.setToolTipText(tr("List of tags to keep on conflict from subject layer without confirmation"));
+            forceKeepTagsField.setAutoCompletionList(referenceTagsAutoCompletionList);
             overwriteTagsCheckbox.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    overwriteTagsField.setEnabled(overwriteTagsCheckbox.isSelected());
+                    boolean enable = overwriteTagsCheckbox.isSelected();
+                    overwriteTagsField.setEnabled(enable);
+                    forceKeepTagsField.setEnabled(enable);
+                    forceKeepTagsLabel.setEnabled(enable);
                 }
             });
         }
@@ -141,16 +150,21 @@ public class MergingPanel extends JPanel {
         if (ExpertToggleAction.isExpert()) {
             horizonatGroup.addGroup(layout.createSequentialGroup()
                     .addComponent(overwriteTagsCheckbox)
-                    .addComponent(overwriteTagsField,
-                            GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(overwriteTagsField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE)
+                    .addComponent(forceKeepTagsLabel)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE)
+                    .addComponent(forceKeepTagsField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 5, Short.MAX_VALUE));
             verticalGroup.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(overwriteTagsCheckbox)
-                    .addComponent(overwriteTagsField));
+                    .addComponent(overwriteTagsField)
+                    .addComponent(forceKeepTagsLabel)
+                    .addComponent(forceKeepTagsField));
         }
         layout.setHorizontalGroup(horizonatGroup);
         layout.setVerticalGroup(verticalGroup);
-    }    
+    }
 
     public void savePreferences(Preferences pref) {
         pref.put(getClass().getName() + ".replaceGeometryCheckBox", replaceGeometryCheckBox.isSelected());
@@ -161,9 +175,10 @@ public class MergingPanel extends JPanel {
         if (overwriteTagsCheckbox != null) {
             pref.put(getClass().getName() + ".overwriteTagsCheckbox", overwriteTagsCheckbox.isSelected());
             pref.put(getClass().getName() + ".overwriteTagsField", overwriteTagsField.getText());
+            pref.put(getClass().getName() + ".forceKeepTagsField", forceKeepTagsField.getText());
         }
     }
-    
+
     public void restoreFromPreferences(Preferences pref) {
         replaceGeometryCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".replaceGeometryCheckBox", true));
         mergeTagsField.setText(pref.get(getClass().getName() + ".mergeTagsField", ""));
@@ -172,10 +187,11 @@ public class MergingPanel extends JPanel {
         mergeTagsCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".mergeTagsCheckBox", true));
         if (overwriteTagsCheckbox != null) {
             overwriteTagsField.setText(pref.get(getClass().getName() + ".overwriteTagsField", ""));
+            forceKeepTagsField.setText(pref.get(getClass().getName() + ".forceKeepTagsField", ""));
             overwriteTagsCheckbox.setSelected(pref.getBoolean(getClass().getName() + ".overwriteTagsCheckbox", false));
         }
     }
-    
+
     public void fillSettings(SimpleMatchSettings settings) {
         settings.isReplacingGeometry = replaceGeometryCheckBox.isSelected();
         if (mergeTagsCheckBox.isSelected()) {
@@ -192,10 +208,14 @@ public class MergingPanel extends JPanel {
         } else {
             settings.mergeTags = new ArrayList<>(0);
         }
-        if ((overwriteTagsField != null) && (overwriteTagsCheckbox != null) && overwriteTagsCheckbox.isSelected()) {
-            settings.overwriteTags = SimpleMatchFinderPanel.splitBySpaceComaOrSemicolon(overwriteTagsField.getText());
-        } else {
-            settings.overwriteTags = new ArrayList<>(0);
+
+        settings.overwriteTags = new ArrayList<>(0);
+        settings.forceKeepTags = new ArrayList<>(0);
+        if ((overwriteTagsCheckbox != null) && overwriteTagsCheckbox.isSelected()) {
+            if (overwriteTagsField != null)
+                settings.overwriteTags = SimpleMatchFinderPanel.splitBySpaceComaOrSemicolon(overwriteTagsField.getText());
+            if (forceKeepTagsField != null)
+                settings.forceKeepTags = SimpleMatchFinderPanel.splitBySpaceComaOrSemicolon(forceKeepTagsField.getText());
         }
     }
 }
