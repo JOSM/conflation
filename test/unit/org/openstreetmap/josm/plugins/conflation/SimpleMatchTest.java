@@ -5,12 +5,17 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.TagCollection;
+import org.openstreetmap.josm.testutils.JOSMTestRules;
 
 public class SimpleMatchTest {
+
+    @Rule
+    public JOSMTestRules rules = new JOSMTestRules().preferences();
 
     @Test
     public void testGetMergingTagCollectionOverwrite() {
