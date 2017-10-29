@@ -116,13 +116,6 @@ public class StopOnErrorSequenceCommand extends Command {
     }
 
     @Override
-    public void invalidateAffectedLayers() {
-        for (int i = 0; i < nbToExecute; i++) {
-            sequence[i].invalidateAffectedLayers();
-        }
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), Arrays.hashCode(sequence), nbToExecute, selection != null, fireSelectionChangedEvent, name);
     }

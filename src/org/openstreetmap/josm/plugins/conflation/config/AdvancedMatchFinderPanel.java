@@ -655,19 +655,19 @@ public class AdvancedMatchFinderPanel extends MatchFinderPanel {
 
     @Override
     public void savePreferences(Preferences pref) {
-        pref.put(getClass().getName() + ".filterByAreaCheckBox", filterByAreaCheckBox.isSelected());
-        pref.put(getClass().getName() + ".filterByWindowCheckBox", filterByWindowCheckBox.isSelected());
-        pref.put(getClass().getName() + ".unionCheckBox", unionCheckBox.isSelected());
-        pref.put(getClass().getName() + ".stdDistanceCheckBox", stdDistanceCheckBox.isSelected());
-        pref.put(getClass().getName() + ".centroidCheckBox", centroidCheckBox.isSelected());
-        pref.put(getClass().getName() + ".hausdorffCheckBox", hausdorffCheckBox.isSelected());
-        pref.put(getClass().getName() + ".symDiffCheckBox", symDiffCheckBox.isSelected());
-        pref.put(getClass().getName() + ".symDiffCentroidsAlignedCheckBox", symDiffCentroidsAlignedCheckBox.isSelected());
-        pref.put(getClass().getName() + ".compactnessCheckBox", compactnessCheckBox.isSelected());
-        pref.put(getClass().getName() + ".angleCheckBox", angleCheckBox.isSelected());
-        pref.put(getClass().getName() + ".levenshteinTagsCheckBox", levenshteinTagsCheckBox.isSelected());
-        pref.putInteger(getClass().getName() + ".unionTextField", unionTextField.getInteger());
-        pref.putInteger(getClass().getName() + ".angleBinField", angleBinField.getInteger());
+        pref.putBoolean(getClass().getName() + ".filterByAreaCheckBox", filterByAreaCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".filterByWindowCheckBox", filterByWindowCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".unionCheckBox", unionCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".stdDistanceCheckBox", stdDistanceCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".centroidCheckBox", centroidCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".hausdorffCheckBox", hausdorffCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".symDiffCheckBox", symDiffCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".symDiffCentroidsAlignedCheckBox", symDiffCentroidsAlignedCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".compactnessCheckBox", compactnessCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".angleCheckBox", angleCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".levenshteinTagsCheckBox", levenshteinTagsCheckBox.isSelected());
+        pref.putInt(getClass().getName() + ".unionTextField", unionTextField.getInteger());
+        pref.putInt(getClass().getName() + ".angleBinField", angleBinField.getInteger());
         pref.putDouble(getClass().getName() + ".filterByAreaMinField", filterByAreaMinField.getDouble());
         pref.putDouble(getClass().getName() + ".filterByAreaMaxField", filterByAreaMaxField.getDouble());
         pref.putDouble(getClass().getName() + ".filterByWindowField", filterByWindowField.getDouble());
@@ -683,7 +683,7 @@ public class AdvancedMatchFinderPanel extends MatchFinderPanel {
         pref.putDouble(getClass().getName() + ".levenshteinTagsWeightField", levenshteinTagsWeightField.getDouble());
         pref.put(getClass().getName() + ".exactTagsField", exactTagsField.getText());
         pref.put(getClass().getName() + ".levenshteinTagsField", levenshteinTagsField.getText());
-        pref.put(getClass().getName() + ".identicalCheckBox", identicalCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".identicalCheckBox", identicalCheckBox.isSelected());
     }
 
     public void restoreFromPreferences(Preferences pref) {
@@ -698,8 +698,8 @@ public class AdvancedMatchFinderPanel extends MatchFinderPanel {
         compactnessCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".compactnessCheckBox", true));
         angleCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".angleCheckBox", true));
         levenshteinTagsCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".levenshteinTagsCheckBox", true));
-        unionTextField.setText("" + Integer.max(2, pref.getInteger(getClass().getName() + ".unionTextField", 2)));
-        angleBinField.setText("" +Integer.max(2, pref.getInteger(getClass().getName() + ".angleBinField", 18)));
+        unionTextField.setText("" + Integer.max(2, pref.getInt(getClass().getName() + ".unionTextField", 2)));
+        angleBinField.setText("" +Integer.max(2, pref.getInt(getClass().getName() + ".angleBinField", 18)));
         filterByAreaMinField.setText("" + Double.max(0.0, pref.getDouble(getClass().getName() + ".filterByAreaMinField", 0.0)));
         filterByAreaMaxField.setText("" + Double.max(0.0, pref.getDouble(getClass().getName() + ".filterByAreaMaxField", 9E6)));
         filterByWindowField.setText("" + Double.max(0.0, pref.getDouble(getClass().getName() + ".filterByWindowField", 50.0)));

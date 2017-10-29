@@ -136,9 +136,9 @@ public class SimpleMatchFinderPanel extends MatchFinderPanel {
 
     public void restoreFromPreferences(Preferences pref) {
         methodCombeBox.setSelectedIndex(Integer.max(0, Integer.min(methodCombeBox.getItemCount()-1,
-                pref.getInteger(getClass().getName() + ".methodIndex", 0))));
+                pref.getInt(getClass().getName() + ".methodIndex", 0))));
         distanceComboBox.setSelectedIndex(Integer.max(0, Integer.min(distanceComboBox.getItemCount()-1,
-                pref.getInteger(getClass().getName() + ".distanceIndex", 1))));
+                pref.getInt(getClass().getName() + ".distanceIndex", 1))));
         threshDistanceField.setText("" + Double.max(0.0,
                 pref.getDouble(getClass().getName() + ".thresholdDistance", DEFAULT_DISTANCE_THRESHOLD)));
         tagsField.setText(pref.get(getClass().getName() + ".tags", ""));
@@ -146,8 +146,8 @@ public class SimpleMatchFinderPanel extends MatchFinderPanel {
 
     @Override
     public void savePreferences(Preferences pref) {
-        pref.putInteger(getClass().getName() + ".methodIndex", methodCombeBox.getSelectedIndex());
-        pref.putInteger(getClass().getName() + ".distanceIndex", distanceComboBox.getSelectedIndex());
+        pref.putInt(getClass().getName() + ".methodIndex", methodCombeBox.getSelectedIndex());
+        pref.putInt(getClass().getName() + ".distanceIndex", distanceComboBox.getSelectedIndex());
         pref.putDouble(getClass().getName() + ".thresholdDistance", threshDistanceField.getDouble());
         pref.put(getClass().getName() + ".tags", tagsField.getText());
     }

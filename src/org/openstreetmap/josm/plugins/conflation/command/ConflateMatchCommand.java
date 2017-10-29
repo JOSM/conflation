@@ -22,6 +22,7 @@ import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.PseudoCommand;
 import org.openstreetmap.josm.command.SequenceCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.data.osm.Relation;
@@ -59,7 +60,7 @@ public class ConflateMatchCommand extends Command {
      */
     public ConflateMatchCommand(SimpleMatch match,
             SimpleMatchList matchesList, SimpleMatchSettings settings) {
-        super(settings.subjectLayer);
+        super(settings.subjectDataSet);
         this.match = match;
         this.matchesList = matchesList;
         this.settings = settings;
@@ -152,7 +153,7 @@ public class ConflateMatchCommand extends Command {
         TagCollection tagCollection = match.getMergingTagCollection(settings);
         List<Command> commands = new ArrayList<>(3);
         if (settings.subjectLayer != settings.referenceLayer) {
-            List<Command> copyPrimitiveCommand = buildCopyPrimitiveCommand(referenceObject, settings.subjectLayer);
+            List<Command> copyPrimitiveCommand = buildCopyPrimitiveCommand(referenceObject, settings.subjectDataSet);
             commands.addAll(copyPrimitiveCommand);
             if (!copyPrimitiveCommand.get(0).executeCommand()) {
                 return null;
@@ -207,13 +208,13 @@ public class ConflateMatchCommand extends Command {
         return command;
     }
 
-    public static List<Command> buildCopyPrimitiveCommand(OsmPrimitive referenceObject, OsmDataLayer layer) {
+    public static List<Command> buildCopyPrimitiveCommand(OsmPrimitive referenceObject, DataSet data) {
         List<PrimitiveData> newObjects = ConflationUtils.copyObjects(referenceObject.getDataSet(), referenceObject);
         List<Command> commands = new ArrayList<>(2);
         // We don't want to fireSelectionChangedEvent as it would degrade performance if we batch many Conflate commands together.
         // So we pass null as second argument to AddPrimitivesCommand, and select the new items ourself:
-        commands.add(new AddPrimitivesCommand(newObjects, null, layer));
-        commands.add(new SetSelectedCommand(layer.data, newObjects, false));
+        commands.add(new AddPrimitivesCommand(newObjects, null, data));
+        commands.add(new SetSelectedCommand(data, newObjects, false));
         return commands;
     }
 

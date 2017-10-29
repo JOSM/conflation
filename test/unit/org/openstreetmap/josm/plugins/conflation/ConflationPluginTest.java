@@ -75,7 +75,7 @@ public class ConflationPluginTest {
         }
         UnmatchedObjectListModel referenceOnlyListModel = new UnmatchedObjectListModel();
         referenceOnlyListModel.addAll(referenceOnly);
-        Command cmd = new ConflateUnmatchedObjectCommand(settings.referenceLayer, settings.subjectLayer, 
+        Command cmd = new ConflateUnmatchedObjectCommand(settings.referenceLayer, settings.subjectDataSet, 
                 referenceOnly, referenceOnlyListModel);
         assertTrue(cmd.executeCommand()); 
         subjectOnly.forEach((p) -> p.setDeleted(true));

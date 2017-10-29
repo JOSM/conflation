@@ -153,13 +153,13 @@ public class MergingPanel extends JPanel {
     }    
 
     public void savePreferences(Preferences pref) {
-        pref.put(getClass().getName() + ".replaceGeometryCheckBox", replaceGeometryCheckBox.isSelected());
-        pref.put(getClass().getName() + ".mergeTagsCheckBox", mergeTagsCheckBox.isSelected());
-        pref.put(getClass().getName() + ".mergeAllCheckBox", mergeAllCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".replaceGeometryCheckBox", replaceGeometryCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".mergeTagsCheckBox", mergeTagsCheckBox.isSelected());
+        pref.putBoolean(getClass().getName() + ".mergeAllCheckBox", mergeAllCheckBox.isSelected());
         pref.put(getClass().getName() + ".mergeTagsField", mergeTagsField.getText());
         pref.put(getClass().getName() + ".mergeTagsExceptField", mergeTagsExceptField.getText());
         if (overwriteTagsCheckbox != null) {
-            pref.put(getClass().getName() + ".overwriteTagsCheckbox", overwriteTagsCheckbox.isSelected());
+            pref.putBoolean(getClass().getName() + ".overwriteTagsCheckbox", overwriteTagsCheckbox.isSelected());
             pref.put(getClass().getName() + ".overwriteTagsField", overwriteTagsField.getText());
         }
     }

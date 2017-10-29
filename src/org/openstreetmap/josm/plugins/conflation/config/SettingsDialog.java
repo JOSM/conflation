@@ -40,13 +40,14 @@ import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.tagging.ac.AutoCompletionPriority;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.Layer;
 import org.openstreetmap.josm.gui.layer.LayerManager.LayerRemoveEvent;
 import org.openstreetmap.josm.gui.layer.MainLayerManager;
 import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionItemPriority;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatchSettings;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -138,7 +139,7 @@ public class SettingsDialog extends ExtendedDialog {
             public void componentHidden(ComponentEvent e) {
                 if (listenersAdded) {
                     DataSet.removeSelectionListener(selectionChangeListener);
-                    Main.getLayerManager().removeActiveLayerChangeListener(layerChangeListener);
+                    MainApplication.getLayerManager().removeActiveLayerChangeListener(layerChangeListener);
                     listenersAdded = false;
                 }
             }
@@ -147,7 +148,7 @@ public class SettingsDialog extends ExtendedDialog {
             public void componentShown(ComponentEvent e) {
                 if (!listenersAdded) {
                     DataSet.addSelectionListener(selectionChangeListener);
-                    Main.getLayerManager().addActiveLayerChangeListener(layerChangeListener);
+                    MainApplication.getLayerManager().addActiveLayerChangeListener(layerChangeListener);
                     listenersAdded = true;
                 }
                 updateFreezeButtons();
@@ -324,7 +325,7 @@ public class SettingsDialog extends ExtendedDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (subjectLayer != null && subjectDataSet != null && subjectSelection != null && !subjectSelection.isEmpty()) {
-                Main.getLayerManager().setActiveLayer(subjectLayer);
+                MainApplication.getLayerManager().setActiveLayer(subjectLayer);
                 subjectLayer.setVisible(true);
                 subjectDataSet.setSelected(subjectSelection);
             }
@@ -340,7 +341,7 @@ public class SettingsDialog extends ExtendedDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (referenceLayer != null && referenceDataSet != null && referenceSelection != null && !referenceSelection.isEmpty()) {
-                Main.getLayerManager().setActiveLayer(referenceLayer);
+                MainApplication.getLayerManager().setActiveLayer(referenceLayer);
                 referenceLayer.setVisible(true);
                 referenceDataSet.setSelected(referenceSelection);
             }
@@ -355,8 +356,8 @@ public class SettingsDialog extends ExtendedDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            subjectDataSet = Main.getLayerManager().getEditDataSet();
-            subjectLayer = Main.getLayerManager().getEditLayer();
+            subjectDataSet = MainApplication.getLayerManager().getEditDataSet();
+            subjectLayer = MainApplication.getLayerManager().getEditLayer();
             if (subjectDataSet == null || subjectLayer == null) {
                 JOptionPane.showMessageDialog(Main.parent,
                     tr("No valid OSM data layer present."), tr("Error freezing selection"),
@@ -383,8 +384,8 @@ public class SettingsDialog extends ExtendedDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            referenceDataSet = Main.getLayerManager().getEditDataSet();
-            referenceLayer = Main.getLayerManager().getEditLayer();
+            referenceDataSet = MainApplication.getLayerManager().getEditDataSet();
+            referenceLayer = MainApplication.getLayerManager().getEditLayer();
             if (referenceDataSet == null || referenceLayer == null) {
                 JOptionPane.showMessageDialog(Main.parent,
                         tr("No valid OSM data layer present."), tr("Error freezing selection"),
@@ -473,7 +474,7 @@ public class SettingsDialog extends ExtendedDialog {
             }
             referenceKeys.removeAll(OsmPrimitive.getDiscardableKeys());
             referenceTagsAutoCompletionList.clear();
-            referenceTagsAutoCompletionList.add(referenceKeys, AutoCompletionItemPriority.IS_IN_DATASET);
+            referenceTagsAutoCompletionList.add(referenceKeys, AutoCompletionPriority.IS_IN_DATASET);
             referenceLayerLabel.setText(referenceLayer.getName());
             referenceLayerLabel.setOpaque(false);
             nbReferenceNodesLabel.setText("" + numNodes);
@@ -501,7 +502,7 @@ public class SettingsDialog extends ExtendedDialog {
     }
 
     public void updateFreezeButtons() {
-        DataSet dataSet = Main.getLayerManager().getEditDataSet();
+        DataSet dataSet = MainApplication.getLayerManager().getEditDataSet();
         updateFreezeButtons((dataSet == null) ? false : !dataSet.getSelected().isEmpty());
     }
 

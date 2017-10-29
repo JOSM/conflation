@@ -14,6 +14,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.data.osm.visitor.MergeSourceBuildingVisitor;
+import org.openstreetmap.josm.gui.MainApplication;
 
 public final class ConflationUtils {
 
@@ -21,7 +22,7 @@ public final class ConflationUtils {
 
     public static EastNorth getCenter(OsmPrimitive prim) {
         LatLon center = prim.getBBox().getTopLeft().getCenter(prim.getBBox().getBottomRight());
-        return Main.map.mapView.getProjection().latlon2eastNorth(center);
+        return MainApplication.getMap().mapView.getProjection().latlon2eastNorth(center);
     }
 
     public static List<PrimitiveData> copyObjects(DataSet sourceDataSet, OsmPrimitive primitive) {

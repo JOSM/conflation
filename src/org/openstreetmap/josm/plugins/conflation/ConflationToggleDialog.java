@@ -62,6 +62,7 @@ import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.gui.SideButton;
@@ -363,14 +364,14 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
     public void showNotify() {
         super.showNotify();
         DataSet.addSelectionListener(this);
-        Main.getLayerManager().addLayerChangeListener(this);
+        MainApplication.getLayerManager().addLayerChangeListener(this);
     }
 
     @Override
     public void hideNotify() {
         super.hideNotify();
         DataSet.removeSelectionListener(this);
-        Main.getLayerManager().removeLayerChangeListener(this);
+        MainApplication.getLayerManager().removeLayerChangeListener(this);
         clear(true, true, true);
         if (settingsDialog != null) {
             settingsDialog.setVisible(false);
@@ -381,8 +382,8 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
 
     private void clear(boolean shouldClearReference, boolean shouldClearSubject, boolean shouldRemoveConflationLayer) {
         if (shouldRemoveConflationLayer && (conflationLayer != null)) {
-            if (Main.getLayerManager().containsLayer(conflationLayer)) {
-                Main.getLayerManager().removeLayer(conflationLayer);
+            if (MainApplication.getLayerManager().containsLayer(conflationLayer)) {
+                MainApplication.getLayerManager().removeLayer(conflationLayer);
             }
             conflationLayer = null;
         }
@@ -432,8 +433,8 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
             if (conflationLayer == null) {
                 conflationLayer = new ConflationLayer(matches, (i) -> matchTable.isRowSelected(matchTable.convertRowIndexToView(i)));
             }
-            if (!Main.getLayerManager().containsLayer(conflationLayer)) {
-                Main.getLayerManager().addLayer(conflationLayer);
+            if (!MainApplication.getLayerManager().containsLayer(conflationLayer)) {
+                MainApplication.getLayerManager().addLayer(conflationLayer);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(Main.parent, ex.toString(), "Error adding conflation layer", JOptionPane.ERROR_MESSAGE);
@@ -567,7 +568,7 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
         @Override
         public void valueChanged(ListSelectionEvent lse) {
             if ((conflationLayer != null) && !lse.getValueIsAdjusting()) {
-                Main.map.mapView.repaint();
+                MainApplication.getMap().mapView.repaint();
             }
         }
     }
@@ -798,7 +799,7 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
         private void conflateUnmatchedObjectActionPerformed() {
             List<OsmPrimitive> unmatchedObjects = referenceOnlyList.getSelectedValuesList();
             Command cmd = new ConflateUnmatchedObjectCommand(settings.referenceLayer,
-                    settings.subjectLayer, unmatchedObjects, referenceOnlyListModel);
+                    settings.subjectDataSet, unmatchedObjects, referenceOnlyListModel);
             Main.main.undoRedo.add(cmd);
             // TODO: change active layer to subject ?
         }
@@ -1129,7 +1130,7 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
      * Launch the matching computation in a PleaseWaitRunnable window.
      */
     private void performMatching() {
-        Main.worker.submit(new PleaseWaitRunnable(tr("Generating matches")) {
+        MainApplication.worker.submit(new PleaseWaitRunnable(tr("Generating matches")) {
 
             private SimpleMatchList computedMatches;
             private Collection<OsmPrimitive> referenceOnlyList;

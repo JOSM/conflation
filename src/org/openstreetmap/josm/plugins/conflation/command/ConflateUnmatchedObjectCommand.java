@@ -10,6 +10,7 @@ import javax.swing.Icon;
 import org.openstreetmap.josm.command.AddPrimitivesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.PseudoCommand;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
@@ -29,14 +30,15 @@ public class ConflateUnmatchedObjectCommand extends Command {
     private final Collection<OsmPrimitive> unmatchedObjects;
     private final UnmatchedObjectListModel listModel;
 
-    public ConflateUnmatchedObjectCommand(OsmDataLayer sourceDataLayer, OsmDataLayer targetDataLayer,
+    public ConflateUnmatchedObjectCommand(OsmDataLayer sourceDataLayer, DataSet targetDataSet,
             Collection<OsmPrimitive> unmatchedObjects, UnmatchedObjectListModel listModel) {
+        super(targetDataSet);
         this.unmatchedObjects = unmatchedObjects;
         this.listModel = listModel;
 
         List<PrimitiveData> newObjects = ConflationUtils.copyObjects(sourceDataLayer.data, unmatchedObjects);
 
-        addPrimitivesCommand = new AddPrimitivesCommand(newObjects, newObjects, targetDataLayer);
+        addPrimitivesCommand = new AddPrimitivesCommand(newObjects, newObjects, targetDataSet);
     }
 
     @Override
