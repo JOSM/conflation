@@ -23,12 +23,9 @@ public class SetSelectedCommand extends Command {
     /** the selection before applying the new selection */
     private Collection<OsmPrimitive> oldSelection;
     
-    private final boolean fireSelectionChangedEvent;
-    
-    public SetSelectedCommand(DataSet dataset, Collection<? extends PrimitiveId> objects, boolean fireSelectionChangedEvent) {
+    public SetSelectedCommand(DataSet dataset, Collection<? extends PrimitiveId> objects) {
         super(dataset);
         this.objects = objects;
-        this.fireSelectionChangedEvent = fireSelectionChangedEvent;
     }
 
     @Override
@@ -39,13 +36,13 @@ public class SetSelectedCommand extends Command {
             newSelection = objects.stream().map(ds::getPrimitiveById).collect(Collectors.toList());
             objects = null;
         }
-        ds.setSelected(newSelection, fireSelectionChangedEvent);
+        ds.setSelected(newSelection);
         return true;
     }
 
     @Override
     public void undoCommand() {
-        getAffectedDataSet().setSelected(oldSelection, fireSelectionChangedEvent);
+        getAffectedDataSet().setSelected(oldSelection);
     }
 
     @Override

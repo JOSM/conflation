@@ -809,10 +809,9 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
                     (match) -> new ConflateMatchCommand(match, matches, settings)).collect(Collectors.toList());
             if (cmds.size() == 1) {
                 Main.main.undoRedo.add(cmds.get(0));
-                settings.subjectDataSet.fireSelectionChanged();
             } else if (cmds.size() > 1) {
                 Command seqCmd = new StopOnErrorSequenceCommand(
-                        settings.subjectDataSet, tr(marktr("Conflate {0} objects"), cmds.size()), true, true, cmds);
+                        settings.subjectDataSet, tr(marktr("Conflate {0} objects"), cmds.size()), true, cmds);
                 Main.main.undoRedo.add(seqCmd);
             }
         }

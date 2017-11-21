@@ -15,8 +15,8 @@ import java.util.stream.Stream;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.Main;
+import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.AddPrimitivesCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
 import org.openstreetmap.josm.command.Command;
@@ -31,7 +31,6 @@ import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.TagMap;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
-import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.conflation.ConflationUtils;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatch;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatchList;
@@ -214,7 +213,7 @@ public class ConflateMatchCommand extends Command {
         // We don't want to fireSelectionChangedEvent as it would degrade performance if we batch many Conflate commands together.
         // So we pass null as second argument to AddPrimitivesCommand, and select the new items ourself:
         commands.add(new AddPrimitivesCommand(newObjects, null, data));
-        commands.add(new SetSelectedCommand(data, newObjects, false));
+        commands.add(new SetSelectedCommand(data, newObjects));
         return commands;
     }
 

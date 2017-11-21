@@ -11,6 +11,7 @@ import javax.swing.Icon;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatch;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatchList;
 import org.openstreetmap.josm.tools.ImageProvider;
@@ -27,6 +28,7 @@ public class RemoveMatchCommand extends Command {
     protected final SimpleMatchList matchesList;
 
     public RemoveMatchCommand(SimpleMatchList matchesList, Collection<SimpleMatch> toRemove) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         this.toRemove = new ArrayList<>(toRemove);
         this.matchesList = matchesList;
     }

@@ -28,30 +28,25 @@ public class StopOnErrorSequenceCommand extends Command {
     protected final String name;
     protected final Command[] sequence;
     protected final HashSet<OsmPrimitive> selection;
-    protected final boolean fireSelectionChangedEvent;
     protected int nbToExecute;
 
     public StopOnErrorSequenceCommand(DataSet data, String name,
-            boolean combineSelection, boolean fireSelectionChangedEvent,
-            Command... sequenz) {
-        this(data, name, combineSelection, fireSelectionChangedEvent, sequenz.clone(), sequenz.length);
+            boolean combineSelection, Command... sequenz) {
+        this(data, name, combineSelection, sequenz.clone(), sequenz.length);
     }
 
     public StopOnErrorSequenceCommand(DataSet data, String name,
-            boolean combineSelection, boolean fireSelectionChangedEvent,
-            Collection<Command> sequenz) {
-        this(data, name, combineSelection, fireSelectionChangedEvent, sequenz.toArray(new Command[sequenz.size()]), sequenz.size());
+            boolean combineSelection, Collection<Command> sequenz) {
+        this(data, name, combineSelection, sequenz.toArray(new Command[sequenz.size()]), sequenz.size());
     }
 
     private StopOnErrorSequenceCommand(DataSet data, String name,
-            boolean combineSelection, boolean fireSelectionChangedEvent,
-            Command[] sequence, int nbToExecute) {
+            boolean combineSelection, Command[] sequence, int nbToExecute) {
         super(data);
         this.name = name;
         this.sequence = sequence;
         this.nbToExecute = nbToExecute;
         this.selection = combineSelection ? new HashSet<>() : null;
-        this.fireSelectionChangedEvent = fireSelectionChangedEvent;
     }
 
     @Override public boolean executeCommand() {
@@ -72,7 +67,7 @@ public class StopOnErrorSequenceCommand extends Command {
             throw e;
         }
         if (selection != null && !selection.isEmpty())
-            getAffectedDataSet().setSelected(selection, fireSelectionChangedEvent);
+            getAffectedDataSet().setSelected(selection);
         nbToExecute = count;
         return count > 0;
     }
@@ -117,7 +112,7 @@ public class StopOnErrorSequenceCommand extends Command {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), Arrays.hashCode(sequence), nbToExecute, selection != null, fireSelectionChangedEvent, name);
+        return Objects.hash(super.hashCode(), Arrays.hashCode(sequence), nbToExecute, selection != null, name);
     }
 
     @Override
@@ -127,7 +122,6 @@ public class StopOnErrorSequenceCommand extends Command {
         if (!super.equals(obj)) return false;
         StopOnErrorSequenceCommand that = (StopOnErrorSequenceCommand) obj;
         return nbToExecute == that.nbToExecute &&
-                fireSelectionChangedEvent == that.fireSelectionChangedEvent &&
                 (selection != null) == (that.selection != null) &&
                 Arrays.equals(sequence, that.sequence) &&
                 Objects.equals(name, that.name);

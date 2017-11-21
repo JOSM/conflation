@@ -11,6 +11,7 @@ import javax.swing.Icon;
 
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.plugins.conflation.UnmatchedObjectListModel;
 import org.openstreetmap.josm.tools.ImageProvider;
 
@@ -20,6 +21,7 @@ public class RemoveUnmatchedObjectCommand extends Command {
 
     public RemoveUnmatchedObjectCommand(UnmatchedObjectListModel model,
             Collection<OsmPrimitive> objects) {
+        super(MainApplication.getLayerManager().getEditDataSet());
         this.model = model;
         this.objects = objects;
     }

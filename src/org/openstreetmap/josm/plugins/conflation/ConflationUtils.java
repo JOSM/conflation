@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
@@ -32,12 +31,12 @@ public final class ConflationUtils {
     public static List<PrimitiveData> copyObjects(DataSet sourceDataSet, Collection<OsmPrimitive> primitives) {
 
         Collection<OsmPrimitive> origSelection = sourceDataSet.getSelected();
-        sourceDataSet.setSelected(primitives, false);
+        sourceDataSet.setSelected(primitives);
         MergeSourceBuildingVisitor builder = new MergeSourceBuildingVisitor(sourceDataSet);
 
         DataSet newDataSet = builder.build();
         //restore selection
-        sourceDataSet.setSelected(origSelection, false);
+        sourceDataSet.setSelected(origSelection);
 
         return newDataSet.allPrimitives().stream()
                 .map(p -> p.save())
