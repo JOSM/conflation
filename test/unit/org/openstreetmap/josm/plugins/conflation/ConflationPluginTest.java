@@ -30,7 +30,6 @@ import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter.OsmImporterData;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.gui.preferences.ToolbarPreferences;
 import org.openstreetmap.josm.gui.progress.NullProgressMonitor;
 import org.openstreetmap.josm.io.IllegalDataException;
 import org.openstreetmap.josm.plugins.conflation.command.ConflateMatchCommand;
@@ -181,9 +180,6 @@ public class ConflationPluginTest {
           I18n.set(Main.pref.get("language", "en"));
           Main.setProjection(Projections.getProjectionByCode("EPSG:3857")); // Mercator
           isInitialized = true;
-          if (Main.toolbar == null) {
-            Main.toolbar = new ToolbarPreferences();
-          }
           ExpertToggleAction.isExpert(); // to be sure it is initialized
         }
     }
