@@ -36,7 +36,7 @@ public class ConflateUnmatchedObjectCommand extends Command {
         this.unmatchedObjects = unmatchedObjects;
         this.listModel = listModel;
 
-        List<PrimitiveData> newObjects = ConflationUtils.copyObjects(sourceDataLayer.data, unmatchedObjects);
+        List<PrimitiveData> newObjects = ConflationUtils.copyObjects(sourceDataLayer.getDataSet(), unmatchedObjects);
 
         addPrimitivesCommand = new AddPrimitivesCommand(newObjects, newObjects, targetDataSet);
     }

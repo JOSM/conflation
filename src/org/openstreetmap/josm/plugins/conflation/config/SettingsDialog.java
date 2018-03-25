@@ -33,8 +33,7 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.AbstractPrimitive;
-import org.openstreetmap.josm.data.osm.AbstractPrimitive.KeyValueVisitor;
+import org.openstreetmap.josm.data.osm.KeyValueVisitor;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -456,12 +455,7 @@ public class SettingsDialog extends ExtendedDialog {
         numRelations = 0;
         if (!referenceSelection.isEmpty()) {
             HashSet<String> referenceKeys = new HashSet<>();
-            KeyValueVisitor referenceKeysVisitor = new KeyValueVisitor() {
-                @Override
-                public void visitKeyValue(AbstractPrimitive primitive, String key, String value) {
-                    referenceKeys.add(key);
-                }
-            };
+            KeyValueVisitor referenceKeysVisitor = (primitive, key, value) -> referenceKeys.add(key);
             for (OsmPrimitive p : referenceSelection) {
                 if (p instanceof Node) {
                     numNodes++;

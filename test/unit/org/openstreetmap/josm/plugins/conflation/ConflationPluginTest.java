@@ -129,9 +129,9 @@ public class ConflationPluginTest {
         }
         Preferences pref = openPreferencesXML(new File(path, "preferences.xml"));
         settings.subjectLayer = subject;
-        settings.subjectDataSet = subject.data;
+        settings.subjectDataSet = subject.getDataSet();
         settings.referenceLayer = reference;
-        settings.referenceDataSet = reference.data;
+        settings.referenceDataSet = reference.getDataSet();
         settings.referenceSelection = reference.data.allPrimitives().stream().filter(
                 (p) -> "yes".equals(p.get("reference"))).collect(Collectors.toList());
         settings.subjectSelection = subject.data.allPrimitives().stream().filter(
