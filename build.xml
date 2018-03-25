@@ -17,6 +17,13 @@
     <property name="plugin.canloadatruntime" value="true"/>
     <property name="version.entry.commit.revision" value="${plugin.version}"/>
 
+    <target name="additional-manifest">
+        <manifest file="MANIFEST" mode="update">
+            <attribute name="11609_Plugin-Url" value="https://github.com/JOSM/conflation/releases/download/v0.5.5/conflation.jar" />
+            <attribute name="12859_Plugin-Url" value="https://github.com/JOSM/conflation/releases/download/v0.5.6/conflation.jar" />
+        </manifest>
+    </target>
+
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 
