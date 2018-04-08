@@ -63,8 +63,8 @@ import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.MainApplication;
-import org.openstreetmap.josm.gui.OsmPrimitivRenderer;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.PrimitiveRenderer;
 import org.openstreetmap.josm.gui.SideButton;
 import org.openstreetmap.josm.gui.dialogs.ToggleDialog;
 import org.openstreetmap.josm.gui.layer.Layer;
@@ -146,8 +146,8 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
         // add selection handler, to center/zoom view
         matchTable.getSelectionModel().addListSelectionListener(new MatchListSelectionHandler());
 
-        matchTable.getColumnModel().getColumn(0).setCellRenderer(new OsmPrimitivRenderer());
-        matchTable.getColumnModel().getColumn(1).setCellRenderer(new OsmPrimitivRenderer());
+        matchTable.getColumnModel().getColumn(0).setCellRenderer(new PrimitiveRenderer());
+        matchTable.getColumnModel().getColumn(1).setCellRenderer(new PrimitiveRenderer());
         matchTable.getColumnModel().getColumn(4).setCellRenderer(new ColorTableCellRenderer("Tags"));
 
         matchTable.setRowSelectionAllowed(true);
@@ -157,13 +157,13 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
         referenceOnlyListModel = new UnmatchedObjectListModel();
         referenceOnlyList = new JList<>(referenceOnlyListModel);
         referenceOnlyList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        referenceOnlyList.setCellRenderer(new OsmPrimitivRenderer());
+        referenceOnlyList.setCellRenderer(new PrimitiveRenderer());
         referenceOnlyList.setTransferHandler(null); // no drag & drop
 
         subjectOnlyListModel = new UnmatchedObjectListModel();
         subjectOnlyList = new JList<>(subjectOnlyListModel);
         subjectOnlyList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        subjectOnlyList.setCellRenderer(new OsmPrimitivRenderer());
+        subjectOnlyList.setCellRenderer(new PrimitiveRenderer());
         subjectOnlyList.setTransferHandler(null); // no drag & drop
 
         //add popup menu for zoom on selection
