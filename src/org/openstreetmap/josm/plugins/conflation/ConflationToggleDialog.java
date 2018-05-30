@@ -120,21 +120,25 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
                 null, 150);
 
         if (!GraphicsEnvironment.isHeadless()) {
-            settingsDialog = new SettingsDialog(pref);
-            settingsDialog.setModalityType(Dialog.ModalityType.MODELESS);
-            settingsDialog.addWindowListener(new WindowAdapter() {
-
+            settingsDialog = new SettingsDialog(pref) {
                 @Override
-                public void windowClosed(WindowEvent e) {
-                    // "Generate matches" was clicked
-                    if (settingsDialog.getValue() == 1) {
-                        clear(true, true, false);
-                        settings = settingsDialog.getSettings();
-                        settingsDialog.savePreferences(pref);
-                        performMatching();
+                protected void buttonAction(int buttonIndex, ActionEvent evt) {
+                    if (buttonIndex == 0) {
+                        if (checkValidityOrNotifyProblems()) {
+                            super.buttonAction(buttonIndex, evt);
+                            ConflationToggleDialog.this.clear(true, true, false);
+                            ConflationToggleDialog.this.settings = this.getSettings();
+                            ConflationToggleDialog.this.settingsDialog.savePreferences(pref);
+                            ConflationToggleDialog.this.performMatching();
+                        } else {
+                            // do nothing
+                        }
+                    } else {
+                        super.buttonAction(buttonIndex, evt);
                     }
                 }
-            });
+            };
+            settingsDialog.setModalityType(Dialog.ModalityType.MODELESS);
         } else {
             settingsDialog = null;
         }

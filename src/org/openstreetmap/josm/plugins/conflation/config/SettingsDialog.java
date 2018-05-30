@@ -272,21 +272,16 @@ public class SettingsDialog extends ExtendedDialog {
         return new CompoundBorder(tileBorder, emptyBorder);
     }
 
-    /**
-     * Matches are actually generated in windowClosed event in ConflationToggleDialog
-     */
-    @Override
-    protected void buttonAction(int buttonIndex, ActionEvent evt) {
-        // "Generate matches" as clicked
-        if (buttonIndex == 0) {
-            if (referenceSelection.isEmpty() || subjectSelection.isEmpty()) {
-                JOptionPane.showMessageDialog(Main.parent,
-                        tr("Selections must be made for both reference and subject."), tr("Incomplete selections"),
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+
+    public boolean checkValidityOrNotifyProblems() {
+        if (referenceSelection.isEmpty() || subjectSelection.isEmpty()) {
+            JOptionPane.showMessageDialog(Main.parent,
+                    tr("Selections must be made for both reference and subject."), tr("Incomplete selections"),
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        } else {
+            return true;
         }
-        super.buttonAction(buttonIndex, evt);
     }
 
     /**
