@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -18,7 +17,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.Icon;
- import javax.swing.JButton;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,13 +31,14 @@ import javax.swing.border.TitledBorder;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.data.Preferences;
-import org.openstreetmap.josm.data.SelectionChangedListener;
-import org.openstreetmap.josm.data.osm.KeyValueVisitor;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
+import org.openstreetmap.josm.data.osm.KeyValueVisitor;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
 import org.openstreetmap.josm.data.osm.Way;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.tagging.ac.AutoCompletionPriority;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -118,10 +118,10 @@ public class SettingsDialog extends ExtendedDialog {
     }
 
     private void initListeners() {
-        final SelectionChangedListener selectionChangeListener = new SelectionChangedListener() {
+        final DataSelectionListener selectionChangeListener = new DataSelectionListener() {
             @Override
-            public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
-                updateFreezeButtons(!newSelection.isEmpty());
+            public void selectionChanged(SelectionChangeEvent event) {
+                updateFreezeButtons(!event.getSelection().isEmpty());
             }
         };
         final MainLayerManager.ActiveLayerChangeListener layerChangeListener = new MainLayerManager.ActiveLayerChangeListener() {
@@ -137,7 +137,7 @@ public class SettingsDialog extends ExtendedDialog {
             @Override
             public void componentHidden(ComponentEvent e) {
                 if (listenersAdded) {
-                    DataSet.removeSelectionListener(selectionChangeListener);
+                    SelectionEventManager.getInstance().removeSelectionListener(selectionChangeListener);
                     MainApplication.getLayerManager().removeActiveLayerChangeListener(layerChangeListener);
                     listenersAdded = false;
                 }
@@ -146,7 +146,7 @@ public class SettingsDialog extends ExtendedDialog {
             @Override
             public void componentShown(ComponentEvent e) {
                 if (!listenersAdded) {
-                    DataSet.addSelectionListener(selectionChangeListener);
+                    SelectionEventManager.getInstance().addSelectionListener(selectionChangeListener);
                     MainApplication.getLayerManager().addActiveLayerChangeListener(layerChangeListener);
                     listenersAdded = true;
                 }

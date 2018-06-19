@@ -13,8 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -50,7 +49,7 @@ import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.Preferences;
-import org.openstreetmap.josm.data.SelectionChangedListener;
+import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.event.AbstractDatasetChangedEvent;
@@ -60,6 +59,7 @@ import org.openstreetmap.josm.data.osm.event.NodeMovedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesAddedEvent;
 import org.openstreetmap.josm.data.osm.event.PrimitivesRemovedEvent;
 import org.openstreetmap.josm.data.osm.event.RelationMembersChangedEvent;
+import org.openstreetmap.josm.data.osm.event.SelectionEventManager;
 import org.openstreetmap.josm.data.osm.event.TagsChangedEvent;
 import org.openstreetmap.josm.data.osm.event.WayNodesChangedEvent;
 import org.openstreetmap.josm.gui.MainApplication;
@@ -86,7 +86,7 @@ import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
 public class ConflationToggleDialog extends ToggleDialog
-implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, LayerChangeListener {
+implements DataSelectionListener, DataSetListener, SimpleMatchListListener, LayerChangeListener {
 
     public static final String TITLE_PREFIX = tr("Conflation");
     final JTabbedPane tabbedPane;
@@ -329,12 +329,12 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
         //same and different reference/subject layers
         settings.referenceDataSet.clearSelection();
         settings.subjectDataSet.clearSelection();
-        DataSet.removeSelectionListener(this);
+        SelectionEventManager.getInstance().removeSelectionListener(this);
         try {
             settings.referenceDataSet.addSelected(refSelected);
             settings.subjectDataSet.addSelected(subSelected);
         } finally {
-            DataSet.addSelectionListener(this);
+            SelectionEventManager.getInstance().addSelectionListener(this);
         }
     }
 
@@ -367,14 +367,14 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
     @Override
     public void showNotify() {
         super.showNotify();
-        DataSet.addSelectionListener(this);
+        SelectionEventManager.getInstance().addSelectionListener(this);
         MainApplication.getLayerManager().addLayerChangeListener(this);
     }
 
     @Override
     public void hideNotify() {
         super.hideNotify();
-        DataSet.removeSelectionListener(this);
+        SelectionEventManager.getInstance().removeSelectionListener(this);
         MainApplication.getLayerManager().removeLayerChangeListener(this);
         clear(true, true, true);
         if (settingsDialog != null) {
@@ -458,8 +458,9 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
     /* ---------------------------------------------------------------------------------- */
 
     @Override
-    public void selectionChanged(Collection<? extends OsmPrimitive> newSelection) {
+    public void selectionChanged(SelectionChangeEvent event) {
         if (!isShowing() || (isDocked && isCollapsed)) return;
+        Set<OsmPrimitive> newSelection = event.getSelection();
         if (newSelection.size() > 0) {
             ListSelectionModel refOnlySelModel = referenceOnlyList.getSelectionModel();
             ListSelectionModel subOnlySelModel = subjectOnlyList.getSelectionModel();
@@ -656,7 +657,7 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
         public abstract void actualActionPerformed(ActionEvent e);
 
         private void beginUpdate() {
-            DataSet.removeSelectionListener(ConflationToggleDialog.this);
+            SelectionEventManager.getInstance().removeSelectionListener(ConflationToggleDialog.this);
             if (settings.subjectDataSet != null) {
                 settings.subjectDataSet.beginUpdate();
             }
@@ -666,7 +667,7 @@ implements SelectionChangedListener, DataSetListener, SimpleMatchListListener, L
         }
 
         private void endUpdate() {
-            DataSet.addSelectionListener(ConflationToggleDialog.this);
+            SelectionEventManager.getInstance().addSelectionListener(ConflationToggleDialog.this);
             if (settings.subjectDataSet != null) {
                 settings.subjectDataSet.endUpdate();
             }
