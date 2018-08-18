@@ -44,11 +44,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.actions.JosmAction;
 import org.openstreetmap.josm.command.Command;
-import org.openstreetmap.josm.data.Preferences;
+import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
@@ -81,6 +80,7 @@ import org.openstreetmap.josm.plugins.conflation.command.RemoveMatchCommand;
 import org.openstreetmap.josm.plugins.conflation.command.RemoveUnmatchedObjectCommand;
 import org.openstreetmap.josm.plugins.conflation.command.StopOnErrorSequenceCommand;
 import org.openstreetmap.josm.plugins.conflation.config.SettingsDialog;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 import org.openstreetmap.josm.tools.InputMapUtils;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
@@ -114,7 +114,7 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
     private final HashMap<OsmPrimitive, SimpleMatch> primitivesRemovedMatchByReference = new HashMap<>();
     private final HashMap<OsmPrimitive, SimpleMatch> primitivesRemovedMatchBySubject = new HashMap<>();
 
-    public ConflationToggleDialog(ConflationPlugin conflationPlugin, Preferences pref) {
+    public ConflationToggleDialog(ConflationPlugin conflationPlugin, IPreferences pref) {
         // TODO: create shortcut?
         super(TITLE_PREFIX, "conflation.png", tr("Activates the conflation plugin"),
                 null, 150);
@@ -441,7 +441,7 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
                 MainApplication.getLayerManager().addLayer(conflationLayer);
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(Main.parent, ex.toString(), "Error adding conflation layer", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), ex.toString(), "Error adding conflation layer", JOptionPane.ERROR_MESSAGE);
         }
         if (conflationLayer != null) {
             conflationLayer.setMatches(matches);
@@ -719,17 +719,17 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
             Component selComponent = getSelectedTabComponent();
             if (selComponent.equals(matchTable)) {
                 if ((e.getModifiers() & ActionEvent.SHIFT_MASK) != 0) {
-                    Main.main.undoRedo.add(new MoveMatchToUnmatchedCommand(matches, getSelectedMatches(),
+                    UndoRedoHandler.getInstance().add(new MoveMatchToUnmatchedCommand(matches, getSelectedMatches(),
                             referenceOnlyListModel, subjectOnlyListModel));
                 } else {
-                    Main.main.undoRedo.add(new RemoveMatchCommand(matches, getSelectedMatches()));
+                    UndoRedoHandler.getInstance().add(new RemoveMatchCommand(matches, getSelectedMatches()));
                 }
             } else if (selComponent.equals(referenceOnlyList)) {
-                Main.main.undoRedo.add(
+                UndoRedoHandler.getInstance().add(
                         new RemoveUnmatchedObjectCommand(referenceOnlyListModel,
                                 referenceOnlyList.getSelectedValuesList()));
             } else if (selComponent.equals(subjectOnlyList)) {
-                Main.main.undoRedo.add(
+                UndoRedoHandler.getInstance().add(
                         new RemoveUnmatchedObjectCommand(subjectOnlyListModel,
                                 subjectOnlyList.getSelectedValuesList()));
             }
@@ -805,7 +805,7 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
             List<OsmPrimitive> unmatchedObjects = referenceOnlyList.getSelectedValuesList();
             Command cmd = new ConflateUnmatchedObjectCommand(settings.referenceLayer,
                     settings.subjectDataSet, unmatchedObjects, referenceOnlyListModel);
-            Main.main.undoRedo.add(cmd);
+            UndoRedoHandler.getInstance().add(cmd);
             // TODO: change active layer to subject ?
         }
 
@@ -813,11 +813,11 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
             List<Command> cmds = getSelectedMatchesStream().map(
                     (match) -> new ConflateMatchCommand(match, matches, settings)).collect(Collectors.toList());
             if (cmds.size() == 1) {
-                Main.main.undoRedo.add(cmds.get(0));
+                UndoRedoHandler.getInstance().add(cmds.get(0));
             } else if (cmds.size() > 1) {
                 Command seqCmd = new StopOnErrorSequenceCommand(
                         settings.subjectDataSet, tr(marktr("Conflate {0} objects"), cmds.size()), true, cmds);
-                Main.main.undoRedo.add(seqCmd);
+                UndoRedoHandler.getInstance().add(seqCmd);
             }
         }
 

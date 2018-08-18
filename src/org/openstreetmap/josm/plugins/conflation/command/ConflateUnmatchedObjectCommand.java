@@ -2,11 +2,15 @@
 // Copyright 2012 by Josh Doe and others.
 package org.openstreetmap.josm.plugins.conflation.command;
 
+import static org.openstreetmap.josm.tools.I18n.trn;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+
 import javax.swing.Icon;
+
 import org.openstreetmap.josm.command.AddPrimitivesCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.PseudoCommand;
@@ -16,8 +20,6 @@ import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.plugins.conflation.ConflationUtils;
 import org.openstreetmap.josm.plugins.conflation.UnmatchedObjectListModel;
-
-import static org.openstreetmap.josm.tools.I18n.trn;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**

@@ -19,9 +19,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.openstreetmap.josm.actions.ExpertToggleAction;
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatchSettings;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 
 /**
  * Panel to configure merging options (replace geometry, merge tags list).
@@ -38,7 +38,7 @@ public class MergingPanel extends JPanel {
     private DefaultPromptTextField overwriteTagsField; // may be null
     private AutoCompletionList referenceTagsAutoCompletionList;
 
-    public MergingPanel(AutoCompletionList referenceKeysAutocompletionList, Preferences pref) {
+    public MergingPanel(AutoCompletionList referenceKeysAutocompletionList, IPreferences pref) {
         this.referenceTagsAutoCompletionList = referenceKeysAutocompletionList;
         this.initComponents();
     }
@@ -152,7 +152,7 @@ public class MergingPanel extends JPanel {
         layout.setVerticalGroup(verticalGroup);
     }    
 
-    public void savePreferences(Preferences pref) {
+    public void savePreferences(IPreferences pref) {
         pref.putBoolean(getClass().getName() + ".replaceGeometryCheckBox", replaceGeometryCheckBox.isSelected());
         pref.putBoolean(getClass().getName() + ".mergeTagsCheckBox", mergeTagsCheckBox.isSelected());
         pref.putBoolean(getClass().getName() + ".mergeAllCheckBox", mergeAllCheckBox.isSelected());
@@ -164,7 +164,7 @@ public class MergingPanel extends JPanel {
         }
     }
     
-    public void restoreFromPreferences(Preferences pref) {
+    public void restoreFromPreferences(IPreferences pref) {
         replaceGeometryCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".replaceGeometryCheckBox", true));
         mergeTagsField.setText(pref.get(getClass().getName() + ".mergeTagsField", ""));
         mergeTagsExceptField.setText(pref.get(getClass().getName() + ".mergeTagsExceptField", ""));

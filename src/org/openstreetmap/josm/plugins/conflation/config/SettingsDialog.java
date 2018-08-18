@@ -28,9 +28,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.JosmAction;
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.osm.DataSelectionListener;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.KeyValueVisitor;
@@ -49,6 +47,7 @@ import org.openstreetmap.josm.gui.layer.MainLayerManager.ActiveLayerChangeEvent;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatchSettings;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 import org.openstreetmap.josm.tools.ImageProvider;
 
 /**
@@ -84,8 +83,8 @@ public class SettingsDialog extends ExtendedDialog {
     OsmDataLayer subjectLayer;
     DataSet referenceDataSet;
 
-    public SettingsDialog(Preferences pref) {
-        super(Main.parent,
+    public SettingsDialog(IPreferences pref) {
+        super(MainApplication.getMainFrame(),
                 tr("Configure conflation settings"),
                 new String[]{tr("Generate matches"), tr("Cancel")},
                 false);
@@ -102,7 +101,7 @@ public class SettingsDialog extends ExtendedDialog {
     /**
      * Build GUI components
      */
-    private void initComponents(Preferences pref) {
+    private void initComponents(IPreferences pref) {
         matchingPanel = new MatchingPanel(referenceTagsAutoCompletionList, pref, () -> this.pack());
         matchingPanel.setBorder(createLightTitleBorder(tr("Matching")));
         mergingPanel = new MergingPanel(referenceTagsAutoCompletionList, pref);
@@ -275,7 +274,7 @@ public class SettingsDialog extends ExtendedDialog {
 
     public boolean checkValidityOrNotifyProblems() {
         if (referenceSelection.isEmpty() || subjectSelection.isEmpty()) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Selections must be made for both reference and subject."), tr("Incomplete selections"),
                     JOptionPane.ERROR_MESSAGE);
             return false;
@@ -300,12 +299,12 @@ public class SettingsDialog extends ExtendedDialog {
         return settings;
     }
 
-    public void savePreferences(Preferences pref) {
+    public void savePreferences(IPreferences pref) {
         matchingPanel.savePreferences(pref);
         mergingPanel.savePreferences(pref);
     }
 
-    public void restoreFromPreferences(Preferences pref) {
+    public void restoreFromPreferences(IPreferences pref) {
         matchingPanel.restoreFromPreferences(pref);
         mergingPanel.restoreFromPreferences(pref);
     }
@@ -353,7 +352,7 @@ public class SettingsDialog extends ExtendedDialog {
             subjectDataSet = MainApplication.getLayerManager().getEditDataSet();
             subjectLayer = MainApplication.getLayerManager().getEditLayer();
             if (subjectDataSet == null || subjectLayer == null) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("No valid OSM data layer present."), tr("Error freezing selection"),
                     JOptionPane.ERROR_MESSAGE);
                 return;
@@ -361,7 +360,7 @@ public class SettingsDialog extends ExtendedDialog {
             subjectSelection.clear();
             subjectSelection.addAll(subjectDataSet.getSelected());
             if (subjectSelection.isEmpty()) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Nothing is selected, please try again."), tr("Empty selection"),
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -381,7 +380,7 @@ public class SettingsDialog extends ExtendedDialog {
             referenceDataSet = MainApplication.getLayerManager().getEditDataSet();
             referenceLayer = MainApplication.getLayerManager().getEditLayer();
             if (referenceDataSet == null || referenceLayer == null) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("No valid OSM data layer present."), tr("Error freezing selection"),
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -389,7 +388,7 @@ public class SettingsDialog extends ExtendedDialog {
             referenceSelection.clear();
             referenceSelection.addAll(referenceDataSet.getSelected());
             if (referenceSelection.isEmpty()) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Nothing is selected, please try again."), tr("Empty selection"),
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -412,7 +411,7 @@ public class SettingsDialog extends ExtendedDialog {
             boolean identicalSet = (subjectSelection.size() == referenceSelection.size()
                     && new HashSet<>(subjectSelection).containsAll(referenceSelection));
             if (identicalSet) {
-                JOptionPane.showMessageDialog(Main.parent,
+                JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                         tr("Reference and subject sets should better be different."), tr("Warning"),
                         JOptionPane.WARNING_MESSAGE);
             }
@@ -482,7 +481,7 @@ public class SettingsDialog extends ExtendedDialog {
         }
         totalRelations += numRelations;
         if (totalRelations != 0) {
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     tr("Relations are not supported yet, please do not select them."), tr("Error"),
                     JOptionPane.ERROR_MESSAGE);
         }

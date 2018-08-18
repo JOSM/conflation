@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.swing.AbstractListModel;
+
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**

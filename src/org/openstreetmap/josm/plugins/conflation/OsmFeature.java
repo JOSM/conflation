@@ -2,12 +2,14 @@
 // Copyright 2012 by Josh Doe and others.
 package org.openstreetmap.josm.plugins.conflation;
 
+import java.util.Map;
+
+import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.plugins.jts.JTSConverter;
+
 import com.vividsolutions.jump.feature.AbstractBasicFeature;
 import com.vividsolutions.jump.feature.AttributeType;
 import com.vividsolutions.jump.feature.FeatureSchema;
-import java.util.Map;
-import org.openstreetmap.josm.data.osm.OsmPrimitive;
-import org.openstreetmap.josm.plugins.jts.JTSConverter;
 
 public class OsmFeature extends AbstractBasicFeature {
     private Object[] attributes;

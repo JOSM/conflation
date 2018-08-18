@@ -14,12 +14,12 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle;
 
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.conflation.matcher.AttributeMatcher;
 import org.openstreetmap.josm.plugins.conflation.matcher.LevenshteinDistanceValueMatcher;
 import org.openstreetmap.josm.plugins.conflation.matcher.OsmNormalizeRule;
 import org.openstreetmap.josm.plugins.conflation.matcher.StandardDistanceMatcher;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 
 import com.vividsolutions.jcs.conflate.polygonmatch.AbstractDistanceMatcher;
 import com.vividsolutions.jcs.conflate.polygonmatch.BasicFCMatchFinder;
@@ -50,7 +50,7 @@ public class SimpleMatchFinderPanel extends MatchFinderPanel {
     private final JLabel tagsLabel = new JLabel(tr("Tags"));
     private final DefaultPromptTextField tagsField = new DefaultPromptTextField(20, tr("none"));
 
-    public SimpleMatchFinderPanel(AutoCompletionList referenceKeysAutocompletionList, Preferences pref) {
+    public SimpleMatchFinderPanel(AutoCompletionList referenceKeysAutocompletionList, IPreferences pref) {
         super();
         threshDistanceField.setToolTipText(tr("Maximum Distance"));
         tagsField.setToolTipText(tr("List of tags to match (default: none)"));
@@ -134,7 +134,7 @@ public class SimpleMatchFinderPanel extends MatchFinderPanel {
         return Stream.of(values.trim().split("[\\s,;]+")).filter((s) -> !s.isEmpty()).collect(Collectors.toList());
     }
 
-    public void restoreFromPreferences(Preferences pref) {
+    public void restoreFromPreferences(IPreferences pref) {
         methodCombeBox.setSelectedIndex(Integer.max(0, Integer.min(methodCombeBox.getItemCount()-1,
                 pref.getInt(getClass().getName() + ".methodIndex", 0))));
         distanceComboBox.setSelectedIndex(Integer.max(0, Integer.min(distanceComboBox.getItemCount()-1,
@@ -145,7 +145,7 @@ public class SimpleMatchFinderPanel extends MatchFinderPanel {
     }
 
     @Override
-    public void savePreferences(Preferences pref) {
+    public void savePreferences(IPreferences pref) {
         pref.putInt(getClass().getName() + ".methodIndex", methodCombeBox.getSelectedIndex());
         pref.putInt(getClass().getName() + ".distanceIndex", distanceComboBox.getSelectedIndex());
         pref.putDouble(getClass().getName() + ".thresholdDistance", threshDistanceField.getDouble());

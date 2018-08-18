@@ -2,10 +2,10 @@
 // Copyright 2012 by Josh Doe and others.
 package org.openstreetmap.josm.plugins.conflation;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.MapFrame;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
+import org.openstreetmap.josm.spi.preferences.Config;
 
 public class ConflationPlugin extends Plugin {
 
@@ -20,7 +20,7 @@ public class ConflationPlugin extends Plugin {
     @Override
     public void mapFrameInitialized(MapFrame oldFrame, MapFrame newFrame) {
         if (oldFrame == null && newFrame != null) {
-            newFrame.addToggleDialog(new ConflationToggleDialog(this, Main.pref));
+            newFrame.addToggleDialog(new ConflationToggleDialog(this, Config.getPref()));
         }
     }
 }

@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import org.openstreetmap.josm.actions.ExpertToggleAction;
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatchSettings;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 
 /**
  * Matchingq panel, that allow to select between {@link SimpleMatchFinderPanel},
@@ -33,13 +33,13 @@ public class MatchingPanel extends JPanel {
     private AutoCompletionList referenceTagsAutoCompletionList;
     private Runnable pack;
     
-    public MatchingPanel(AutoCompletionList referenceKeysAutocompletionList, Preferences pref, Runnable pack) {
+    public MatchingPanel(AutoCompletionList referenceKeysAutocompletionList, IPreferences pref, Runnable pack) {
         this.referenceTagsAutoCompletionList = referenceKeysAutocompletionList;
         this.pack = pack;
         this.initComponents(pref);
     }
     
-    private void initComponents(Preferences pref) {
+    private void initComponents(IPreferences pref) {
         this.setLayout(new BorderLayout());
         simpleMatchFinderPanel = new SimpleMatchFinderPanel(referenceTagsAutoCompletionList, pref);
         advancedMatchFinderPanel = new AdvancedMatchFinderPanel(referenceTagsAutoCompletionList, pref);
@@ -106,7 +106,7 @@ public class MatchingPanel extends JPanel {
         return (MatchFinderPanel) selectedMatchFinderBox.getComponent(0);
     }    
 
-    public void savePreferences(Preferences pref) {
+    public void savePreferences(IPreferences pref) {
         simpleMatchFinderPanel.savePreferences(pref);
         advancedMatchFinderPanel.savePreferences(pref);
         if (programmingMatchFinderPanel != null) {
@@ -114,7 +114,7 @@ public class MatchingPanel extends JPanel {
         }
     }
     
-    public void restoreFromPreferences(Preferences pref) {
+    public void restoreFromPreferences(IPreferences pref) {
         simpleMatchFinderPanel.restoreFromPreferences(pref);
         advancedMatchFinderPanel.restoreFromPreferences(pref);
         if (programmingMatchFinderPanel != null) {

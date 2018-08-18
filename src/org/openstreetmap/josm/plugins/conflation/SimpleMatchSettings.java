@@ -2,17 +2,16 @@
 // Copyright 2012 by Josh Doe and others.
 package org.openstreetmap.josm.plugins.conflation;
 
-import com.vividsolutions.jcs.conflate.polygonmatch.FCMatchFinder;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
+
+import com.vividsolutions.jcs.conflate.polygonmatch.FCMatchFinder;
 
 /**
  * Result of the configuration {@Link SettingsDialog}.

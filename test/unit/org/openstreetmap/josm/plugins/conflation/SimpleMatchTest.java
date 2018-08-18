@@ -12,6 +12,9 @@ import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
 
+/**
+ * Unit tests of {@link SimpleMatch}
+ */
 public class SimpleMatchTest {
 
     @Rule

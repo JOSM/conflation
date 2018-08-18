@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.AutoScaleAction;
 import org.openstreetmap.josm.command.AddPrimitivesCommand;
 import org.openstreetmap.josm.command.ChangePropertyCommand;
@@ -30,6 +29,7 @@ import org.openstreetmap.josm.data.osm.RelationData;
 import org.openstreetmap.josm.data.osm.Tag;
 import org.openstreetmap.josm.data.osm.TagCollection;
 import org.openstreetmap.josm.data.osm.TagMap;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.conflict.tags.CombinePrimitiveResolverDialog;
 import org.openstreetmap.josm.plugins.conflation.ConflationUtils;
 import org.openstreetmap.josm.plugins.conflation.SimpleMatch;
@@ -198,7 +198,7 @@ public class ConflateMatchCommand extends Command {
             command = ReplaceGeometryUtils.buildReplaceCommand(subjectObject, referenceObject);
         } catch (ReplaceGeometryException ex) {
             AutoScaleAction.zoomTo(Arrays.asList(subjectObject, referenceObject));
-            JOptionPane.showMessageDialog(Main.parent,
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
                     ex.getMessage(), tr("Cannot replace geometry."), JOptionPane.INFORMATION_MESSAGE);
         } finally {
             referenceObject.setKeys(savedReferenceTags);

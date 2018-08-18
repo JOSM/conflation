@@ -23,13 +23,13 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.gui.tagging.ac.AutoCompletionList;
 import org.openstreetmap.josm.plugins.conflation.matcher.AttributeMatcher;
 import org.openstreetmap.josm.plugins.conflation.matcher.ExactValueMatcher;
 import org.openstreetmap.josm.plugins.conflation.matcher.LevenshteinDistanceValueMatcher;
 import org.openstreetmap.josm.plugins.conflation.matcher.OsmNormalizeRule;
 import org.openstreetmap.josm.plugins.conflation.matcher.StandardDistanceMatcher;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 
 import com.vividsolutions.jcs.conflate.polygonmatch.AngleHistogramMatcher;
 import com.vividsolutions.jcs.conflate.polygonmatch.AreaFilterFCMatchFinder;
@@ -153,7 +153,7 @@ public class AdvancedMatchFinderPanel extends MatchFinderPanel {
     private DefaultPromptTextField levenshteinTagsField = new DefaultPromptTextField(15, tr("none"));
     private JCheckBox identicalCheckBox = new JCheckBox("", true);
 
-    public AdvancedMatchFinderPanel(AutoCompletionList referenceKeysAutocompletionList, Preferences pref) {
+    public AdvancedMatchFinderPanel(AutoCompletionList referenceKeysAutocompletionList, IPreferences pref) {
         super();
         filterByAreaTextArea.setFont(angleLabel.getFont().deriveFont(Font.ITALIC));
         unioningTextArea.setFont(angleLabel.getFont().deriveFont(Font.ITALIC));
@@ -654,7 +654,7 @@ public class AdvancedMatchFinderPanel extends MatchFinderPanel {
     }
 
     @Override
-    public void savePreferences(Preferences pref) {
+    public void savePreferences(IPreferences pref) {
         pref.putBoolean(getClass().getName() + ".filterByAreaCheckBox", filterByAreaCheckBox.isSelected());
         pref.putBoolean(getClass().getName() + ".filterByWindowCheckBox", filterByWindowCheckBox.isSelected());
         pref.putBoolean(getClass().getName() + ".unionCheckBox", unionCheckBox.isSelected());
@@ -686,7 +686,7 @@ public class AdvancedMatchFinderPanel extends MatchFinderPanel {
         pref.putBoolean(getClass().getName() + ".identicalCheckBox", identicalCheckBox.isSelected());
     }
 
-    public void restoreFromPreferences(Preferences pref) {
+    public void restoreFromPreferences(IPreferences pref) {
         filterByAreaCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".filterByAreaCheckBox", true));
         filterByWindowCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".filterByWindowCheckBox", true));
         unionCheckBox.setSelected(pref.getBoolean(getClass().getName() + ".unionCheckBox", false));

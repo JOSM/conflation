@@ -10,9 +10,9 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.plugins.conflation.config.parser.InstanceConstructor;
 import org.openstreetmap.josm.plugins.conflation.config.parser.InstanceEditor;
+import org.openstreetmap.josm.spi.preferences.IPreferences;
 
 import com.vividsolutions.jcs.conflate.polygonmatch.FCMatchFinder;
 import com.vividsolutions.jcs.conflate.polygonmatch.FeatureMatcher;
@@ -58,7 +58,7 @@ public final class ProgrammingMatchFinderPanel extends MatchFinderPanel {
             "\t\t\t\t\tIdenticalFilter\n" +
             ")))))";
 
-    public ProgrammingMatchFinderPanel(Preferences pref) {
+    public ProgrammingMatchFinderPanel(IPreferences pref) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         editorPanel = new InstanceEditor<>(FCMatchFinder.class, "Match Finder", jcsConstructors, 8, 70);
@@ -94,12 +94,12 @@ public final class ProgrammingMatchFinderPanel extends MatchFinderPanel {
         return editorPanel.getEditedInstance();
     }
 
-    public void restoreFromPreferences(Preferences pref) {
+    public void restoreFromPreferences(IPreferences pref) {
         editorPanel.getTextArea().setText(pref.get(getClass().getName() + ".expression", SIMPLE_EXAMPLE));
     }
 
     @Override
-    public void savePreferences(Preferences pref) {
+    public void savePreferences(IPreferences pref) {
         pref.put(getClass().getName() + ".expression", editorPanel.getTextArea().getText());
     }
 

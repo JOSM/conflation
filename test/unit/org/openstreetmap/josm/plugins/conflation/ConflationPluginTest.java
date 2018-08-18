@@ -21,11 +21,11 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExpertToggleAction;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.data.Preferences;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
+import org.openstreetmap.josm.data.projection.ProjectionRegistry;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter;
 import org.openstreetmap.josm.gui.io.importexport.OsmImporter.OsmImporterData;
@@ -36,6 +36,7 @@ import org.openstreetmap.josm.plugins.conflation.command.ConflateMatchCommand;
 import org.openstreetmap.josm.plugins.conflation.command.ConflateUnmatchedObjectCommand;
 import org.openstreetmap.josm.plugins.conflation.config.MatchingPanel;
 import org.openstreetmap.josm.plugins.conflation.config.MergingPanel;
+import org.openstreetmap.josm.spi.preferences.Config;
 import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.openstreetmap.josm.tools.I18n;
 
@@ -172,13 +173,11 @@ public class ConflationPluginTest {
     public static void setUpBeforeClass() {
       if (!isInitialized) {
           //System.setProperty("josm.home", "test/data/preferences");
-          Main.pref.enableSaveOnPut(false);
+          Preferences.main().enableSaveOnPut(false);
           I18n.init();
-          Main.determinePlatformHook();
-          Main.platform.preStartupHook();
-          Main.pref.init(false);
-          I18n.set(Main.pref.get("language", "en"));
-          Main.setProjection(Projections.getProjectionByCode("EPSG:3857")); // Mercator
+          Preferences.main().init(false);
+          I18n.set(Config.getPref().get("language", "en"));
+          ProjectionRegistry.setProjection(Projections.getProjectionByCode("EPSG:3857")); // Mercator
           isInitialized = true;
           ExpertToggleAction.isExpert(); // to be sure it is initialized
         }
