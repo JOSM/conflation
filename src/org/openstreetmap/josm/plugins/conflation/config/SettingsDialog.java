@@ -117,12 +117,7 @@ public class SettingsDialog extends ExtendedDialog {
     }
 
     private void initListeners() {
-        final DataSelectionListener selectionChangeListener = new DataSelectionListener() {
-            @Override
-            public void selectionChanged(SelectionChangeEvent event) {
-                updateFreezeButtons(!event.getSelection().isEmpty());
-            }
-        };
+        final DataSelectionListener selectionChangeListener = event -> updateFreezeButtons(!event.getSelection().isEmpty());
         final MainLayerManager.ActiveLayerChangeListener layerChangeListener = new MainLayerManager.ActiveLayerChangeListener() {
             @Override
             public void activeOrEditLayerChanged(ActiveLayerChangeEvent e) {
