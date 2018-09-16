@@ -59,7 +59,7 @@ public class Angle {
    * @return the angle in degrees
    */
   public static double toDegrees(double radians) {
-      return (radians * 180) / (Math.PI);
+      return (radians * 180) / Math.PI;
   }
 
   /**

@@ -217,7 +217,7 @@ class InstanceParser<M> implements IParser {
         }
         try {
             if (instantiate) {
-                return (T) (cnstr.constructor.newInstance(params));
+                return (T) cnstr.constructor.newInstance(params);
             } else {
                 return null;
             }

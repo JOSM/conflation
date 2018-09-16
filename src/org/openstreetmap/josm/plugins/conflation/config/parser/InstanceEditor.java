@@ -166,12 +166,12 @@ public class InstanceEditor<T> extends JPanel {
     private static String getIdentifierAtPosition(String text, int position) {
         int start = getBeginingOfIdentifierAtPosition(text, position);
         int end = position;
-        while ((end < text.length()) && (Character.isJavaIdentifierPart(text.charAt(end)))) end++;
+        while ((end < text.length()) && Character.isJavaIdentifierPart(text.charAt(end))) end++;
         return text.substring(start, end);
     }
 
     private static int getBeginingOfIdentifierAtPosition(String text, int position) {
-        while ((position > 0) && (Character.isJavaIdentifierPart(text.charAt(position-1)))) position--;
+        while ((position > 0) && Character.isJavaIdentifierPart(text.charAt(position-1))) position--;
         return position;
     }
 

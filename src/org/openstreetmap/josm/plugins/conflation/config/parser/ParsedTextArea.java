@@ -137,7 +137,7 @@ public class ParsedTextArea extends JosmTextArea {
 
     private void updateInfoMessage() {
         parser.parse(getText().substring(0, getCaretPosition()));
-        if (parser.isFullyParsed() && (!parser.isValid())) {
+        if (parser.isFullyParsed() && !parser.isValid()) {
             updatePopup(infoPopupItem, parser.getLastTokenDescription(), parser.getLastTokenIndex(), true);
         } else {
             ((JPopupMenu) infoPopupItem.getParent()).setVisible(false);
@@ -157,7 +157,7 @@ public class ParsedTextArea extends JosmTextArea {
 
     private void updatePopup(JMenuItem popupMenuItem, String text, int position, boolean above) {
         JPopupMenu popup = (JPopupMenu) popupMenuItem.getParent();
-        if ((text != null) && (!text.isEmpty())) {
+        if ((text != null) && !text.isEmpty()) {
             Point textArealocation = getLocationOnScreen();
             Rectangle positionRect;
             try {

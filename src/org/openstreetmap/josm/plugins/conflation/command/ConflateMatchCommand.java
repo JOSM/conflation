@@ -125,7 +125,7 @@ public class ConflateMatchCommand extends Command {
      * @return the built command or null in case of error or user cancellation.
      */
     private SequenceCommand buildCommand() {
-        List<Command> list = (settings.isReplacingGeometry) ?
+        List<Command> list = settings.isReplacingGeometry ?
                 buildCopyAndReplaceGeometryCommand(match, settings)
                 : buildTagMergingCommand(match, settings);
         if (list == null) {
