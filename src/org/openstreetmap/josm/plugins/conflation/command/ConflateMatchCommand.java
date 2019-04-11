@@ -39,6 +39,7 @@ import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeomet
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.UserCancelException;
+import org.openstreetmap.josm.tools.Utils;
 
 
 /**
@@ -240,7 +241,7 @@ public class ConflateMatchCommand extends Command {
 
     private static HashMap<Relation, RelationData> saveAndRemoveRelationMembersFor(OsmPrimitive primitive) {
         HashMap<Relation, RelationData> savedData = new HashMap<>();
-        for (Relation r: OsmPrimitive.getFilteredList(primitive.getReferrers(), Relation.class)) {
+        for (Relation r: Utils.filteredCollection(primitive.getReferrers(), Relation.class)) {
             savedData.put(r, r.save());
             r.removeMembersFor(primitive);
         }
