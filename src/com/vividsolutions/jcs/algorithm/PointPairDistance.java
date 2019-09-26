@@ -34,7 +34,7 @@
 
 package com.vividsolutions.jcs.algorithm;
 
-import com.vividsolutions.jts.geom.*;
+import org.locationtech.jts.geom.*;
 
 /**
  * Contains a pair of points and the distance between them.

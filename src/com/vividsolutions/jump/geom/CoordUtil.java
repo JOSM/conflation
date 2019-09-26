@@ -33,7 +33,7 @@ package com.vividsolutions.jump.geom;
 
 import java.awt.geom.Point2D;
 
-import com.vividsolutions.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Coordinate;
 import com.vividsolutions.jump.util.MathUtil;
 
 /**

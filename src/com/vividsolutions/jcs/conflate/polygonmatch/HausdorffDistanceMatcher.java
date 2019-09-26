@@ -1,7 +1,7 @@
 package com.vividsolutions.jcs.conflate.polygonmatch;
 
 import com.vividsolutions.jcs.algorithm.VertexHausdorffDistance;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 /**
  * Uses an approximation of the Hausdorff distance.

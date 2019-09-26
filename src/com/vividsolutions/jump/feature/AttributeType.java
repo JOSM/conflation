@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 /**
  * A type for the attributes of a feature.

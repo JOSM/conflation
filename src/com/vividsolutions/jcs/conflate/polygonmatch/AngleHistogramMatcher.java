@@ -33,10 +33,10 @@ package com.vividsolutions.jcs.conflate.polygonmatch;
 import java.util.List;
 
 import com.vividsolutions.jcs.geom.Angle;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.WKTReader;
+import org.locationtech.jts.util.Assert;
 import com.vividsolutions.jump.util.CoordinateArrays;
 /**
  * Matches geometries by comparing their "angle histograms". An angle histogram

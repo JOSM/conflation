@@ -1,6 +1,6 @@
 package com.vividsolutions.jump.feature;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 /**
  * Subclasses need to implement only the four remaining Feature methods:

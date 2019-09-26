@@ -1,6 +1,6 @@
 package com.vividsolutions.jcs.conflate.polygonmatch;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 public class OverlapMatcher extends IndependentCandidateMatcher {
 

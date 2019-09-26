@@ -1,6 +1,6 @@
 package com.vividsolutions.jump.feature;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 
 public interface Feature extends Cloneable, Comparable<Feature> {
 	/**

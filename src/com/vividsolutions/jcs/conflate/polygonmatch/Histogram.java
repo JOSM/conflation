@@ -34,7 +34,7 @@
 
 package com.vividsolutions.jcs.conflate.polygonmatch;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 /**
  * Generic model for a bar graph.

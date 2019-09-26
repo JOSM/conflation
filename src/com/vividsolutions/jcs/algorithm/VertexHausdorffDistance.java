@@ -34,10 +34,10 @@
 
 package com.vividsolutions.jcs.algorithm;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateFilter;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineSegment;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateFilter;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.LineSegment;
 /**
  * Implements algorithm for computing a distance metric
  * which can be thought of as the "Maximum Vertex Distance".

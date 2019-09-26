@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vividsolutions.jts.util.Assert;
+import org.locationtech.jts.util.Assert;
 
 public class FeatureSchema implements Cloneable {
     //<<TODO:QUESTION>> Is this an efficient implementation? Must cast the Integer to

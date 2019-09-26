@@ -34,7 +34,7 @@
 
 package com.vividsolutions.jcs.algorithm;
 
-import com.vividsolutions.jts.geom.*;
+import org.locationtech.jts.geom.*;
 
 /**
  * Computes the Euclidean distance (L2 metric) from a Point to a Geometry.
