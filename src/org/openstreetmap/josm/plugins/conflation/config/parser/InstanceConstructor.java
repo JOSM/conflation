@@ -4,8 +4,6 @@ package org.openstreetmap.josm.plugins.conflation.config.parser;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 
-import org.apache.commons.jcs.access.exception.InvalidArgumentException;
-
 /**
  * Description of a class constructor.
  * Actually only the constructor with me largest number of arguments
@@ -87,9 +85,9 @@ public class InstanceConstructor {
         this.varrgsTypes = varArgsTypes;
         this.varArgsDescriptions = varArgsDescriptions;
         if (constructor == null)
-            throw new InvalidArgumentException("No Public constructor found");
+            throw new IllegalArgumentException("No Public constructor found");
         if (constructor.getParameterCount() != paramsDescriptipon.length)
-            throw new InvalidArgumentException(type.getSimpleName() + " paramDescription.length is != " + constructor.getParameterCount());
+            throw new IllegalArgumentException(type.getSimpleName() + " paramDescription.length is != " + constructor.getParameterCount());
         if (varArgsTypes != null) {
             Class<?>[] paramTypes = constructor.getParameterTypes();
             assert (paramTypes[paramTypes.length -1].isArray());
