@@ -354,7 +354,7 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
 
         public ConfigureAction() {
             // TODO: settle on sensible shortcuts
-            super(tr("Configure"), "dialogs/settings", tr("Configure conflation options"),
+            super(tr("Configure"), "preference", tr("Configure conflation options"),
                     null, false);
         }
 
