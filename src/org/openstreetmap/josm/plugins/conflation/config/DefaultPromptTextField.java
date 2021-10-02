@@ -30,7 +30,7 @@ public class DefaultPromptTextField extends AutoCompletingTextField {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (!hasFocus() && getText().isEmpty()) {
             Graphics2D g2 = (Graphics2D) g;
