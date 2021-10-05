@@ -23,6 +23,8 @@
             <attribute name="12859_Plugin-Url" value="v0.5.6;https://github.com/JOSM/conflation/releases/download/v0.5.6/conflation.jar" />
             <attribute name="13561_Plugin-Url" value="v0.5.7;https://github.com/JOSM/conflation/releases/download/v0.5.7/conflation.jar" />
             <attribute name="13564_Plugin-Url" value="v0.6.0;https://github.com/JOSM/conflation/releases/download/v0.6.0/conflation.jar" />
+            <attribute name="14371_Plugin-Url" value="v0.6.5;https://github.com/JOSM/conflation/releases/download/v0.6.5/conflation.jar" />
+            <attribute name="16799_Plugin-Url" value="v0.6.6;https://github.com/JOSM/conflation/releases/download/v0.6.6/conflation.jar" />
         </manifest>
     </target>
 
