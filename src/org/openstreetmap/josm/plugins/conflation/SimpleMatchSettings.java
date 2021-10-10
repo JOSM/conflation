@@ -43,7 +43,6 @@ public class SimpleMatchSettings {
      */
     public Collection<String> overwriteTags;
 
-
     /**
      * A Collection that always answer true when asked if it contains any object (except for the removed items!).
      */

@@ -7,6 +7,9 @@ import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 import org.openstreetmap.josm.spi.preferences.Config;
 
+/**
+ * Conflation plugin.
+ */
 public class ConflationPlugin extends Plugin {
 
     /**

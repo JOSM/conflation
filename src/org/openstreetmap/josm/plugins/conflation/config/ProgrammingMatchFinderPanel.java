@@ -17,7 +17,6 @@ import org.openstreetmap.josm.spi.preferences.IPreferences;
 import com.vividsolutions.jcs.conflate.polygonmatch.FCMatchFinder;
 import com.vividsolutions.jcs.conflate.polygonmatch.FeatureMatcher;
 
-
 /**
  * Programming Match Finder Panel.
  * Allow user to directly enter a constructor expression.

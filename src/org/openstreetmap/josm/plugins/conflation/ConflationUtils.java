@@ -15,6 +15,9 @@ import org.openstreetmap.josm.data.osm.PrimitiveData;
 import org.openstreetmap.josm.data.osm.visitor.MergeSourceBuildingVisitor;
 import org.openstreetmap.josm.gui.MainApplication;
 
+/**
+ * Utilities class.
+ */
 public final class ConflationUtils {
 
     private ConflationUtils() {}

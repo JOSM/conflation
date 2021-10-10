@@ -266,7 +266,6 @@ public class SettingsDialog extends ExtendedDialog {
         return new CompoundBorder(tileBorder, emptyBorder);
     }
 
-
     public boolean checkValidityOrNotifyProblems() {
         if (referenceSelection.isEmpty() || subjectSelection.isEmpty()) {
             JOptionPane.showMessageDialog(MainApplication.getMainFrame(),

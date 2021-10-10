@@ -49,7 +49,6 @@ import com.vividsolutions.jcs.conflate.polygonmatch.WeightedMatcher;
 import com.vividsolutions.jcs.conflate.polygonmatch.WindowFilter;
 import com.vividsolutions.jcs.plugin.conflate.polygonmatch.MyValidatingTextField;
 
-
 /**
  * This advanced panel is a modified version of the original code
  * from Vivd Solutions for the JUMP JCS Plugin ToolboxPanel.java.

@@ -41,7 +41,6 @@ import org.openstreetmap.josm.tools.ImageProvider;
 import org.openstreetmap.josm.tools.UserCancelException;
 import org.openstreetmap.josm.tools.Utils;
 
-
 /**
  * Command to conflate one object with another.
  */

@@ -13,5 +13,4 @@ public class AccentlessNormalizeRule implements NormalizeRule {
     public String normalize(String value) {
         return Normalizer.normalize(value, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
     }
-
 }

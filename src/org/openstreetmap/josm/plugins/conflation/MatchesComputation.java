@@ -162,7 +162,5 @@ public final class MatchesComputation {
         public boolean isCancelRequested() {
             return josmMonitor.isCanceled();
         }
-
     }
-
 }

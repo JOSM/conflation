@@ -82,9 +82,13 @@ import org.openstreetmap.josm.plugins.conflation.command.StopOnErrorSequenceComm
 import org.openstreetmap.josm.plugins.conflation.config.SettingsDialog;
 import org.openstreetmap.josm.spi.preferences.IPreferences;
 import org.openstreetmap.josm.tools.InputMapUtils;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.Shortcut;
 import org.xml.sax.SAXException;
 
+/**
+ * Conflation dialog.
+ */
 public class ConflationToggleDialog extends ToggleDialog
 implements DataSelectionListener, DataSetListener, SimpleMatchListListener, LayerChangeListener {
 
@@ -130,8 +134,6 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
                             ConflationToggleDialog.this.settings = this.getSettings();
                             ConflationToggleDialog.this.settingsDialog.savePreferences(pref);
                             ConflationToggleDialog.this.performMatching();
-                        } else {
-                            // do nothing
                         }
                     } else {
                         super.buttonAction(buttonIndex, evt);
@@ -441,7 +443,9 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
                 MainApplication.getLayerManager().addLayer(conflationLayer);
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), ex.toString(), "Error adding conflation layer", JOptionPane.ERROR_MESSAGE);
+            Logging.error(ex);
+            JOptionPane.showMessageDialog(MainApplication.getMainFrame(), ex.toString(),
+                    "Error adding conflation layer", JOptionPane.ERROR_MESSAGE);
         }
         if (conflationLayer != null) {
             conflationLayer.setMatches(matches);

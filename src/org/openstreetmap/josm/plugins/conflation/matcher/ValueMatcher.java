@@ -9,5 +9,4 @@ public interface ValueMatcher {
      * @return matching score (between 0.0 and 1.0)
      */
     double match(String target, String candidate);
-
 }

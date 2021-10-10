@@ -12,5 +12,4 @@ public abstract class MatchFinderPanel extends JPanel {
     public abstract FCMatchFinder getMatchFinder();
 
     public abstract void savePreferences(IPreferences pref);
-
 }

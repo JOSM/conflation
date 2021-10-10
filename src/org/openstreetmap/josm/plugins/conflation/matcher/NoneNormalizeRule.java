@@ -9,5 +9,4 @@ public class NoneNormalizeRule implements NormalizeRule {
     public String normalize(String value) {
         return value;
     }
-
 }

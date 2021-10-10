@@ -24,5 +24,4 @@ public interface SimpleMatchListListener {
      * @param list The new list.
      */
     void simpleMatchListIntervalRemoved(SimpleMatchList list, int firstRow, int lastRow);
-
 }
