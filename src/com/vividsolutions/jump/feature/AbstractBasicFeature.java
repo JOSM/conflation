@@ -182,7 +182,7 @@ public abstract class AbstractBasicFeature implements Feature {
         for (int i = 0; i < schema.getAttributeCount(); i++) {
             if (schema.getAttributeType(i) == AttributeType.GEOMETRY) {
                 clone.setAttribute(i,
-                    deep ? getGeometry().clone() : getGeometry());
+                    deep ? getGeometry().copy() : getGeometry());
             } else {
                 clone.setAttribute(i, getAttribute(i));
             }
