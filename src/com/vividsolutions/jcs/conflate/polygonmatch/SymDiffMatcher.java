@@ -53,8 +53,8 @@ public class SymDiffMatcher extends IndependentCandidateMatcher {
    */
   @Override
   public double match(Geometry target, Geometry candidate) {
-    Geometry targetGeom = (Geometry) target.clone();
-    Geometry candidateGeom = (Geometry) candidate.clone();
+    Geometry targetGeom = target.copy();
+    Geometry candidateGeom = candidate.copy();
     if (targetGeom.isEmpty() || candidateGeom.isEmpty()) {
       return 0; //avoid div by 0 in centre-of-mass calc [Jon Aquino]
     }

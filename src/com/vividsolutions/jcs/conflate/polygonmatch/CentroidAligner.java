@@ -16,7 +16,7 @@ public class CentroidAligner extends IndependentCandidateMatcher {
     }
 
     private Geometry align(Geometry original) {
-        Geometry aligned = (Geometry) original.clone();
+        Geometry aligned = original.copy();
         MatcherUtil.align(aligned, aligned.getCentroid().getCoordinate());
         return aligned;
     }

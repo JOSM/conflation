@@ -84,7 +84,7 @@ public class AngleHistogramMatcher extends IndependentCandidateMatcher {
      * weighted by segment length
      */
     protected Histogram angleHistogram(Geometry g, int binCount) {
-        Geometry clone = (Geometry) g.clone();
+        Geometry clone = g.copy();
         //#normalize makes linestrings and polygons use a standard orientation.
         //[Jon Aquino]
         clone.normalize();
