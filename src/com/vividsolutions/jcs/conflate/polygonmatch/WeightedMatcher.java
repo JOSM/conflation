@@ -33,6 +33,7 @@ package com.vividsolutions.jcs.conflate.polygonmatch;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import org.locationtech.jts.util.Assert;
@@ -48,9 +49,10 @@ public class WeightedMatcher implements FeatureMatcher {
 
     /**
    * Creates a WeightedMatcher with the given matchers and their weights.
-   * @param matchersAndWeights alternates between FeatureMatchers and Doubles
+   * @param matchersAndWeights alternates between Doubles and FeatureMatchers
    */
-  public WeightedMatcher(Object[] matchersAndWeights) {
+  public WeightedMatcher(Object... matchersAndWeights) {
+    Objects.requireNonNull(matchersAndWeights);
     Assert.isTrue(matchersAndWeights.length % 2 == 0);
     for (int i = 0; i < matchersAndWeights.length; i += 2) {
       add((FeatureMatcher) matchersAndWeights[i+1],
@@ -70,10 +72,10 @@ public class WeightedMatcher implements FeatureMatcher {
     if (weight == 0) {
         return;
     }
-    matcherToWeightMap.put(matcher, Double.valueOf(weight));
+    this.matcherToWeightMap.put(matcher, weight);
   }
 
-  private Map<FeatureMatcher, Double> matcherToWeightMap = new HashMap<>();
+  private final Map<FeatureMatcher, Double> matcherToWeightMap = new HashMap<>();
 
   /**
    * Searches a collection of candidate features for those that match the given
@@ -93,10 +95,7 @@ public class WeightedMatcher implements FeatureMatcher {
 
   private Matches toMatches(Map<Feature, Double> featureToScoreMap, FeatureSchema schema) {
     Matches matches = new Matches(schema);
-    for (Feature feature : featureToScoreMap.keySet()) {
-      double score = featureToScoreMap.get(feature).doubleValue();
-      matches.add(feature, score);
-    }
+    featureToScoreMap.forEach(matches::add);
     return matches;
   }
 
@@ -111,36 +110,24 @@ public class WeightedMatcher implements FeatureMatcher {
 
   private Map<Feature, Double> featureToScoreMap(Map<FeatureMatcher, Matches> matcherToMatchesMap) {
     Map<Feature, Double> featureToScoreMap = new TreeMap<>();
-    for (FeatureMatcher matcher : matcherToMatchesMap.keySet()) {
-      Matches matches = matcherToMatchesMap.get(matcher);
-      addToFeatureToScoreMap(matches, matcher, featureToScoreMap);
-    }
+    matcherToMatchesMap.forEach((matcher, matches) -> this.addToFeatureToScoreMap(matches, matcher, featureToScoreMap));
     return featureToScoreMap;
   }
 
   private void addToFeatureToScoreMap(Matches matches, FeatureMatcher matcher,
                                       Map<Feature, Double> featureToScoreMap) {
-    for (int i = 0; i < matches.size(); i++) {
-      double score = matches.getScore(i) * normalizedWeight(matcher);
-      addToFeatureToScoreMap(matches.getFeature(i), score, featureToScoreMap);
-    }
-  }
 
-  private void addToFeatureToScoreMap(Feature feature, double score, Map<Feature, Double> featureToScoreMap) {
-    Double oldScore = featureToScoreMap.get(feature);
-    if (oldScore == null) { oldScore = Double.valueOf(0); }
-    featureToScoreMap.put(feature, Double.valueOf(oldScore.doubleValue() + score));
+    for (Map.Entry<Feature, Double> entry : matches.entrySet()) {
+      double score = entry.getValue() * this.normalizedWeight(matcher);
+      featureToScoreMap.compute(entry.getKey(), (key, value) -> value == null ? score : value + score);
+    }
   }
 
   private double normalizedWeight(FeatureMatcher matcher) {
-    return matcherToWeightMap.get(matcher).doubleValue() / weightTotal();
+    return this.matcherToWeightMap.get(matcher) / this.weightTotal();
   }
 
   private double weightTotal() {
-    double weightTotal = 0;
-    for (Double weight : matcherToWeightMap.values()) {
-      weightTotal += weight.doubleValue();
-    }
-    return weightTotal;
+    return this.matcherToWeightMap.values().stream().mapToDouble(Double::doubleValue).sum();
   }
 }

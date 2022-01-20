@@ -31,10 +31,14 @@
  */
 package com.vividsolutions.jcs.conflate.polygonmatch;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.util.Assert;
@@ -47,8 +51,8 @@ import com.vividsolutions.jump.feature.FeatureSchema;
  * A FeatureCollection that stores the "score" of each Feature.  The score is
  * a number between 0.0 and 1.0 that indicates the confidence of a match.
  */
-public class Matches implements FeatureCollection, Cloneable {
-
+public class Matches extends AbstractMap<Feature, Double> implements FeatureCollection, Cloneable {
+    private final Set<Map.Entry<Feature, Double>> entrySet = new HashSet<>();
     /**
      * Creates a Matches object.
      * @param schema metadata applicable to the features that will be stored in
@@ -80,8 +84,8 @@ public class Matches implements FeatureCollection, Cloneable {
         }
     }
 
-    private FeatureDataset dataset;
-    private List<Double> scores = new ArrayList<>();
+    private final FeatureDataset dataset;
+    private final List<Double> scores = new ArrayList<>();
 
     /**
      * This method is not supported, because added features need to be associated
@@ -135,6 +139,24 @@ public class Matches implements FeatureCollection, Cloneable {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public Set<Entry<Feature, Double>> entrySet() {
+        if (this.size() == this.entrySet.size()) {
+            return this.entrySet;
+        }
+        return updateEntrySet();
+    }
+
+    private synchronized Set<Entry<Feature, Double>> updateEntrySet() {
+        if (this.size() != this.entrySet.size()) {
+            this.entrySet.clear();
+            for (int i = 0; i < this.size(); i++) {
+                this.entrySet.add(new SimpleEntry<>(this.getFeature(i), this.getScore(i)));
+            }
+        }
+        return this.entrySet;
+    }
+
     /**
      * This method is not supported, because Matches should not normally need to
      * have matches removed.
@@ -167,7 +189,7 @@ public class Matches implements FeatureCollection, Cloneable {
         if (score == 0) {
             return;
         }
-        scores.add(Double.valueOf(score));
+        scores.add(score);
         dataset.add(feature);
         if (score > topScore) {
             topScore = score;
@@ -195,7 +217,7 @@ public class Matches implements FeatureCollection, Cloneable {
      * @return the confidence of the ith match
      */
     public double getScore(int i) {
-        return scores.get(i).doubleValue();
+        return scores.get(i);
     }
 
     @Override

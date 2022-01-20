@@ -3,18 +3,19 @@
 package org.openstreetmap.josm.plugins.conflation;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.jts.JTSConverter;
 
 import com.vividsolutions.jump.feature.AbstractBasicFeature;
 import com.vividsolutions.jump.feature.AttributeType;
+import com.vividsolutions.jump.feature.Feature;
 import com.vividsolutions.jump.feature.FeatureSchema;
 
 public class OsmFeature extends AbstractBasicFeature {
     private Object[] attributes;
-    private OsmPrimitive primitive;
-    private JTSConverter converter;
+    private final OsmPrimitive primitive;
 
     /**
      * Create a copy of the OSM geometry
@@ -22,14 +23,15 @@ public class OsmFeature extends AbstractBasicFeature {
      */
     public OsmFeature(OsmPrimitive prim, JTSConverter jtsConverter) {
         super(new FeatureSchema());
-        primitive = prim;
+        this.primitive = Objects.requireNonNull(prim);
         Map<String, String> keys = prim.getKeys();
-        attributes = new Object[keys.size() + 1];
-        getSchema().addAttribute("__GEOMETRY__", AttributeType.GEOMETRY);
-        for (String key : keys.keySet()) {
-            getSchema().addAttribute(key, AttributeType.STRING);
-            setAttribute(key, keys.get(key));
-        }
+        this.attributes = new Object[keys.size() + 1];
+        this.getSchema().addAttribute("__GEOMETRY__", AttributeType.GEOMETRY);
+        keys.forEach((key, value) -> {
+            this.getSchema().addAttribute(key, AttributeType.STRING);
+            setAttribute(key, value);
+        });
+        final JTSConverter converter;
         if (jtsConverter != null)
             converter = jtsConverter;
         else
@@ -67,5 +69,30 @@ public class OsmFeature extends AbstractBasicFeature {
         // consider the dataset (e.g. two non-uploaded layers can have different
         // objects with the same id
         return (int) primitive.getUniqueId();
+    }
+
+    @Override
+    public int compareTo(Feature abstractBasicFeature) {
+        // Rather unfortunately, we cannot implement the interface with OsmFeature
+        // So we are going to special case osm features, and compare ids.
+        // The super.compareTo only looks at geometry. If the geometry is the same, then it returns 0.
+        final int superCompare = super.compareTo(abstractBasicFeature);
+        if (superCompare == 0 && abstractBasicFeature instanceof OsmFeature) {
+            final OsmFeature other = (OsmFeature) abstractBasicFeature;
+            return this.primitive.compareTo(other.primitive);
+        }
+        return superCompare;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other != null && this.getClass().equals(other.getClass())
+                && Objects.equals(((OsmFeature) other).primitive, this.primitive);
+    }
+
+    @Override
+    public int hashCode() {
+        // No superclasses implement hashCode
+        return this.primitive.hashCode();
     }
 }
