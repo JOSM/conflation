@@ -1120,9 +1120,10 @@ implements DataSelectionListener, DataSetListener, SimpleMatchListListener, Laye
     public void layerRemoving(LayerRemoveEvent e) {
         Layer removedLayer = e.getRemovedLayer();
         if (settings != null) {
+            boolean shouldclearConflationLayer = removedLayer == this.conflationLayer;
             boolean shouldclearReferenceSettings = removedLayer == settings.referenceLayer;
             boolean shouldclearSubjectSettings = removedLayer == settings.subjectLayer;
-            if (shouldclearReferenceSettings || shouldclearSubjectSettings) {
+            if (shouldclearReferenceSettings || shouldclearSubjectSettings || shouldclearConflationLayer) {
                 clear(shouldclearReferenceSettings, shouldclearSubjectSettings, true);
             }
         }
