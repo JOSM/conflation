@@ -4,17 +4,25 @@ package org.openstreetmap.josm.plugins.conflation;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
 
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.data.osm.Relation;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.plugins.jts.JTSConverter;
+import org.openstreetmap.josm.tools.Logging;
 
 import com.vividsolutions.jcs.conflate.polygonmatch.FCMatchFinder;
 import com.vividsolutions.jcs.conflate.polygonmatch.Matches;
@@ -45,7 +53,29 @@ public final class MatchesComputation {
         HashSet<OsmPrimitive> subPrimitives = new HashSet<>(settings.subjectSelection);
         allPrimitives.addAll(refPrimitives);
         allPrimitives.addAll(subPrimitives);
-        FeatureCollection allFeatures = createFeatureCollection(allPrimitives);
+
+        AbstractMap.SimpleEntry<FeatureCollection,HashMap<OsmPrimitive, Throwable>>
+            allFeaturesAndErrors = createFeatureCollection(allPrimitives, monitor);
+
+        FeatureCollection allFeatures = allFeaturesAndErrors.getKey();
+        HashMap<OsmPrimitive, Throwable> allErrors = allFeaturesAndErrors.getValue();
+
+        if (! allErrors.isEmpty()) {
+            GuiHelper.runInEDT(() -> new Notification(
+                    tr("Some items where ignored as their geometry is not compatible with the JTS library")
+                    ).setIcon(JOptionPane.WARNING_MESSAGE).show());
+            for (Map.Entry<OsmPrimitive, Throwable> entry : allErrors.entrySet()) {
+                if (refPrimitives.contains(entry.getKey())) {
+                    refPrimitives.remove(entry.getKey());
+                    settings.referenceSelection.remove(entry.getKey());
+                }
+                if (subPrimitives.contains(entry.getKey())) {
+                    subPrimitives.remove(entry.getKey());
+                    settings.subjectSelection.remove(entry.getKey());
+                }
+            }
+        }
+
 
         FeatureCollection refColl = new FeatureDataset(allFeatures.getFeatureSchema());
         FeatureCollection subColl = new FeatureDataset(allFeatures.getFeatureSchema());
@@ -56,6 +86,7 @@ public final class MatchesComputation {
             if (subPrimitives.contains(osmFeature.getPrimitive()))
                 subColl.add(osmFeature);
         }
+
 
         // Index the collection for efficient search with WindowMatcher
         refColl = new IndexedFeatureCollection(refColl);
@@ -109,16 +140,24 @@ public final class MatchesComputation {
         return schema;
     }
 
-    private static FeatureCollection createFeatureCollection(Collection<OsmPrimitive> prims) {
+    private static AbstractMap.SimpleEntry<FeatureCollection,HashMap<OsmPrimitive, Throwable>>
+        createFeatureCollection(Collection<OsmPrimitive> prims, ProgressMonitor monitor)
+    {
         FeatureDataset dataset = new FeatureDataset(createSchema(prims));
+        HashMap<OsmPrimitive, Throwable> errorset = new HashMap<OsmPrimitive, Throwable>();
         //TODO: use factory instead of passing converter
         JTSConverter converter = new JTSConverter(true);
         for (OsmPrimitive prim : prims) {
             // Relations not supported yet
-            if (!(prim instanceof Relation))
-                dataset.add(new OsmFeature(prim, converter));
+            try {
+                if (!(prim instanceof Relation))
+                    dataset.add(new OsmFeature(prim, converter));
+            } catch (Throwable e) {
+                Logger.getLogger(MatchesComputation.class.getName()).log(Level.WARNING, "Element skipped: cannot convert OSM primitive geometry to JTS feature", e);
+                errorset.put(prim, e);
+            }
         }
-        return dataset;
+        return new AbstractMap.SimpleEntry<FeatureCollection,HashMap<OsmPrimitive, Throwable>>(dataset, errorset);
     }
 
     /**
