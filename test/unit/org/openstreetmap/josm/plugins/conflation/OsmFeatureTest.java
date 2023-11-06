@@ -2,18 +2,16 @@ package org.openstreetmap.josm.plugins.conflation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 import org.openstreetmap.josm.plugins.jts.JTSConverter;
-import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.openstreetmap.josm.testutils.annotations.BasicPreferences;
+import org.openstreetmap.josm.testutils.annotations.Projection;
 
 import com.vividsolutions.jump.feature.AttributeType;
 import com.vividsolutions.jump.feature.FeatureSchema;
@@ -24,9 +22,8 @@ import nl.jqno.equalsverifier.EqualsVerifier;
  * @author Taylor Smock
  */
 @BasicPreferences
+@Projection
 class OsmFeatureTest {
-    @RegisterExtension
-    JOSMTestRules josmTestRules = new JOSMTestRules().projection();
     /**
      * This checks that two osm features (points) do not match if they have the same geometry but different ids.
      * This is a partial non-regression test for JOSM #21788. The root of the issue is that TreeMap uses the Comparable

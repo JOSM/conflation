@@ -5,28 +5,25 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openstreetmap.josm.data.coor.LatLon;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.plugins.conflation.OsmFeature;
 import org.openstreetmap.josm.plugins.jts.JTSConverter;
-import org.openstreetmap.josm.testutils.JOSMTestRules;
 import org.openstreetmap.josm.testutils.annotations.BasicPreferences;
+import org.openstreetmap.josm.testutils.annotations.Projection;
 
 import com.vividsolutions.jump.feature.Feature;
 import com.vividsolutions.jump.feature.FeatureCollection;
 import com.vividsolutions.jump.feature.FeatureDataset;
 import com.vividsolutions.jump.feature.FeatureSchema;
-import com.vividsolutions.jump.feature.IndexedFeatureCollection;
 
 /**
  * Test class for {@link WeightedMatcher}
  * @author Taylor Smock
  */
 @BasicPreferences
+@Projection
 class WeightedMatcherTest {
-    @RegisterExtension
-    JOSMTestRules josmTestRules = new JOSMTestRules().projection();
     /**
      * Non-regression test for JOSM #21788
      * This occurred when two {@link org.openstreetmap.josm.plugins.conflation.OsmFeature} objects had {@link Comparable}
