@@ -58,6 +58,6 @@ public interface FeatureMatcher {
    * @return the matching features, and a score for each. (Implementors should
    * document how they do their scoring).
    */
-  public Matches match(Feature target, FeatureCollection candidates);
+  Matches match(Feature target, FeatureCollection candidates);
 
 }

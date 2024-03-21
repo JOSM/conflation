@@ -55,6 +55,7 @@ import com.vividsolutions.jump.feature.FeatureSchema;
  */
 public class Matches extends AbstractMap<Feature, Double> implements FeatureCollection, Cloneable {
     private final Set<Map.Entry<Feature, Double>> entrySet = new HashSet<>();
+    private int size;
     /**
      * Creates a Matches object.
      * @param schema metadata applicable to the features that will be stored in
@@ -82,16 +83,26 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
     public Matches(FeatureSchema schema, List<Feature> features) {
         // We want to ensure that the dataset won't have a ton of ArrayList#grow calls
         // So we initialize the dataset with all the data
-        this.dataset = new FeatureDataset(features.size(), schema);
+        this.dataset = new FeatureDataset(features.size(), schema, null);
         this.scores = new double[features.size()];
+        addAll(features, 1, true);
+    }
 
-        for (Feature match : features) {
-            add(match, 1);
-        }
+    /**
+     * Creates a Matches object, initialized with the given Dataset.
+     * @param featureDataset The dataset to use for initialization
+     */
+    public Matches(FeatureDataset featureDataset) {
+        // We want to ensure that the dataset won't have a ton of ArrayList#grow calls
+        // So we initialize the dataset with all the data
+        this.scores = new double[featureDataset.size()];
+        this.dataset = new FeatureDataset(featureDataset);
+
+        addAll(featureDataset, 1, false);
     }
 
     private final FeatureDataset dataset;
-    private double[] scores = new double[0];
+    private double[] scores;
 
     /**
      * This method is not supported, because added features need to be associated
@@ -111,6 +122,12 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
     @Override
     public void addAll(Collection<? extends Feature> features) {
         throw new UnsupportedOperationException("Use #add(feature, score) instead");
+    }
+
+    private void addAll(Iterable<? extends Feature> features, double score, boolean addToDataset) {
+        for (Feature feature : features) {
+            add(feature, score, addToDataset);
+        }
     }
 
     /**
@@ -191,6 +208,10 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * @param score the confidence of the match, ranging from 0 to 1
      */
     public void add(Feature feature, double score) {
+        add(feature, score, true);
+    }
+
+    private void add(Feature feature, double score, boolean addToDataset) {
         // We want to avoid the string concatenation here, if we don't need it.
         // It is *very* expensive when run with large datasets.
         // This used to be an Assert.isTrue statement
@@ -200,8 +221,8 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
         if (score == 0) {
             return;
         }
-        scoreAdd(dataset.size(), score);
-        dataset.add(feature);
+        scoreAdd(size++, score);
+        if (addToDataset) dataset.add(feature);
         if (score > topScore) {
             topScore = score;
             topMatch = feature;
@@ -216,7 +237,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
     }
 
     private Feature topMatch;
-    private double topScore = 0;
+    private double topScore;
 
     public double getTopScore() {
         return topScore;

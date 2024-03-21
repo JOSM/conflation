@@ -36,6 +36,7 @@ import java.util.Arrays;
 
 import com.vividsolutions.jump.feature.Feature;
 import com.vividsolutions.jump.feature.FeatureCollection;
+import com.vividsolutions.jump.feature.FeatureDataset;
 
 /**
  * Composes several FeatureMatchers into one. Candidate features are whittled
@@ -68,8 +69,7 @@ public class ChainMatcher implements FeatureMatcher {
    */
     @Override
   public Matches match(Feature target, FeatureCollection candidates) {
-    Matches survivors = new Matches(
-        candidates.getFeatureSchema(), candidates.getFeatures());
+    Matches survivors = new Matches(new FeatureDataset(candidates.getFeatures(), candidates.getFeatureSchema(), candidates.getEnvelope()));
     for (FeatureMatcher matcher : matchers) {
       survivors = matcher.match(target, survivors);
     }

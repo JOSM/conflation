@@ -55,18 +55,31 @@ public class FeatureDataset implements FeatureCollection {
      * @param featureSchema the types of the attributes of the features in this collection
      */
     public FeatureDataset(Collection<Feature> newFeatures, FeatureSchema featureSchema) {
-        features = new ArrayList<>(newFeatures);
+        this(newFeatures, featureSchema, null);
+    }
+
+    /**
+     * Creates a FeatureDataset, initialized with a group of Features.
+     * @param newFeatures an initial group of features to add to this FeatureDataset
+     * @param featureSchema the types of the attributes of the features in this collection
+     * @param envelope The expected envelope for the features
+     */
+    public FeatureDataset(Collection<Feature> newFeatures, FeatureSchema featureSchema, Envelope envelope) {
+        this.features = new ArrayList<>(newFeatures);
         this.featureSchema = featureSchema;
+        this.envelope = envelope != null ? envelope.copy() : null;
     }
 
     /**
      * Creates a FeatureDataset, with an initial list size for features
      * @param newFeatures The expected size of the features
      * @param featureSchema the types of the attributes of the features in this collection
+     * @param envelope The expected envelope for this dataset
      */
-    public FeatureDataset(int newFeatures, FeatureSchema featureSchema) {
-        features = new ArrayList<>(newFeatures);
+    public FeatureDataset(int newFeatures, FeatureSchema featureSchema, Envelope envelope) {
+        this.features = new ArrayList<>(newFeatures);
         this.featureSchema = featureSchema;
+        this.envelope = envelope == null ? null : envelope.copy();
     }
 
     /**
@@ -74,7 +87,18 @@ public class FeatureDataset implements FeatureCollection {
      * @param featureSchema the types of the attributes of the features in this collection
      */
     public FeatureDataset(FeatureSchema featureSchema) {
-        this(new ArrayList<Feature>(), featureSchema);
+        this(new ArrayList<>(), featureSchema);
+    }
+
+    /**
+     * Clone another dataset
+     * @param otherDataset The dataset to clone
+     */
+    public FeatureDataset(FeatureDataset otherDataset) {
+        this(otherDataset.getFeatures(), otherDataset.getFeatureSchema());
+        if (otherDataset.envelope != null) {
+            this.envelope = otherDataset.envelope.copy();
+        }
     }
 
     public Feature getFeature(int index) {
@@ -82,7 +106,7 @@ public class FeatureDataset implements FeatureCollection {
     }
 
     @Override
-	public FeatureSchema getFeatureSchema() {
+    public FeatureSchema getFeatureSchema() {
         return featureSchema;
     }
 
@@ -91,7 +115,7 @@ public class FeatureDataset implements FeatureCollection {
      * later change a Feature's geometry using Feature#setGeometry.
      */
     @Override
-	public Envelope getEnvelope() {
+    public Envelope getEnvelope() {
         if (envelope == null) {
             envelope = new Envelope();
 
@@ -105,12 +129,12 @@ public class FeatureDataset implements FeatureCollection {
     }
 
     @Override
-	public List<Feature> getFeatures() {
+    public List<Feature> getFeatures() {
         return Collections.unmodifiableList(features);
     }
 
     @Override
-	public boolean isEmpty() {
+    public boolean isEmpty() {
         return size() == 0;
     }
 
@@ -122,7 +146,7 @@ public class FeatureDataset implements FeatureCollection {
     //<<TODO:DESIGN>> Perhaps return value should be a Set, not a List, because order
     //doesn't matter. [Jon Aquino]
     @Override
-	public List<Feature> query(Envelope envelope) {
+    public List<Feature> query(Envelope envelope) {
         if (!envelope.intersects(getEnvelope())) {
             return new ArrayList<>();
         }
@@ -141,7 +165,7 @@ public class FeatureDataset implements FeatureCollection {
     }
 
     @Override
-	public void add(Feature feature) {
+    public void add(Feature feature) {
         features.add(feature);
         if (envelope != null) {
             envelope.expandToInclude(feature.getGeometry().getEnvelopeInternal());
@@ -162,7 +186,7 @@ public class FeatureDataset implements FeatureCollection {
      * @param env
      */
     @Override
-	public Collection<Feature> remove(Envelope env) {
+    public Collection<Feature> remove(Envelope env) {
         Collection<Feature> features = query(env);
         removeAll(features);
 
@@ -170,7 +194,7 @@ public class FeatureDataset implements FeatureCollection {
     }
 
     @Override
-	public void remove(Feature feature) {
+    public void remove(Feature feature) {
         features.remove(feature);
         invalidateEnvelope();
     }
@@ -179,18 +203,18 @@ public class FeatureDataset implements FeatureCollection {
      * Removes all features from this collection.
      */
     @Override
-	public void clear() {
+    public void clear() {
         invalidateEnvelope();
         features.clear();
     }
 
     @Override
-	public int size() {
+    public int size() {
         return features.size();
     }
 
     @Override
-	public Iterator<Feature> iterator() {
+    public Iterator<Feature> iterator() {
         return features.iterator();
     }
 
@@ -199,7 +223,7 @@ public class FeatureDataset implements FeatureCollection {
     }
 
     @Override
-	public void addAll(Collection<? extends Feature> features) {
+    public void addAll(Collection<? extends Feature> features) {
         this.features.addAll(features);
         if (envelope != null) {
             for (Feature feature : features) {
@@ -209,7 +233,7 @@ public class FeatureDataset implements FeatureCollection {
     }
 
     @Override
-	public void removeAll(Collection<Feature> features) {
+    public void removeAll(Collection<Feature> features) {
         this.features.removeAll(features);
         invalidateEnvelope();
     }

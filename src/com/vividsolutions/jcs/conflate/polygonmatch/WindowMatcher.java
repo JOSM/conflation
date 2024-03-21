@@ -37,6 +37,7 @@ package com.vividsolutions.jcs.conflate.polygonmatch;
 import org.locationtech.jts.geom.Envelope;
 import com.vividsolutions.jump.feature.Feature;
 import com.vividsolutions.jump.feature.FeatureCollection;
+import com.vividsolutions.jump.feature.FeatureDataset;
 import com.vividsolutions.jump.geom.EnvelopeUtil;
 
 /**
@@ -79,6 +80,6 @@ public class WindowMatcher implements FeatureMatcher {
   public Matches match(Feature target, FeatureCollection candidates) {
     Envelope window = new Envelope(target.getGeometry().getEnvelopeInternal());
     window = EnvelopeUtil.expand(window, buffer);
-    return new Matches(candidates.getFeatureSchema(), candidates.query(window));
+    return new Matches(new FeatureDataset(candidates.query(window), candidates.getFeatureSchema(), window));
   }
 }

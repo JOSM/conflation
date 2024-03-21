@@ -31,9 +31,12 @@
  */
 package com.vividsolutions.jcs.conflate.polygonmatch;
 
+import java.util.Collections;
+
 import org.locationtech.jts.geom.Geometry;
 import com.vividsolutions.jump.feature.Feature;
 import com.vividsolutions.jump.feature.FeatureCollection;
+import com.vividsolutions.jump.feature.FeatureDataset;
 
 /**
  * Base class of FeatureMatchers that compare the target to each candidate
@@ -46,7 +49,9 @@ public abstract class IndependentCandidateMatcher implements FeatureMatcher {
 
     @Override
   public Matches match(Feature target, FeatureCollection candidates) {
-    Matches matches = new Matches(candidates.getFeatureSchema());
+    final FeatureDataset fds = new FeatureDataset(Collections.emptySet(), candidates.getFeatureSchema(),
+            candidates.getEnvelope());
+    final Matches matches = new Matches(fds);
     for (Feature candidate : candidates) {
       double score = match(target.getGeometry(), candidate.getGeometry());
       if (score > 0) { matches.add(candidate, score); }
