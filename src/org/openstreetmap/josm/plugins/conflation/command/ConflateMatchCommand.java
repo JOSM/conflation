@@ -38,6 +38,7 @@ import org.openstreetmap.josm.plugins.conflation.SimpleMatchSettings;
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryException;
 import org.openstreetmap.josm.plugins.utilsplugin2.replacegeometry.ReplaceGeometryUtils;
 import org.openstreetmap.josm.tools.ImageProvider;
+import org.openstreetmap.josm.tools.Logging;
 import org.openstreetmap.josm.tools.UserCancelException;
 import org.openstreetmap.josm.tools.Utils;
 
@@ -195,7 +196,8 @@ public class ConflateMatchCommand extends Command {
         TagMap savedSubjectTags = saveAndRemoveTagsNotInCollection(subjectObject, tagCollection);
         Command command = null;
         try {
-            command = ReplaceGeometryUtils.buildReplaceCommand(subjectObject, referenceObject);
+            command = ReplaceGeometryUtils.buildReplaceCommand(subjectObject, referenceObject,
+                    CombinePrimitiveResolverDialog.Strategy.KEEP_NON_CONFLICTING);
         } catch (ReplaceGeometryException ex) {
             AutoScaleAction.zoomTo(Arrays.asList(subjectObject, referenceObject));
             JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
@@ -230,8 +232,10 @@ public class ConflateMatchCommand extends Command {
             return CombinePrimitiveResolverDialog.launchIfNecessary(
                     match.getMergingTagCollection(settings),
                     Arrays.asList(match.getReferenceObject(), match.getSubjectObject()),
-                    Collections.singleton(match.getSubjectObject()));
+                    Collections.singleton(match.getSubjectObject()),
+                    CombinePrimitiveResolverDialog.Strategy.KEEP_NON_CONFLICTING);
         } catch (UserCancelException e) {
+            Logging.trace(e);
             return null;
         } finally {
             restoreRelationsData(savedRelationsData);
