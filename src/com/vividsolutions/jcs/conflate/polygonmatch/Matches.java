@@ -32,8 +32,9 @@
 package com.vividsolutions.jcs.conflate.polygonmatch;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +42,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.locationtech.jts.geom.Envelope;
-import org.locationtech.jts.util.Assert;
+import org.locationtech.jts.util.AssertionFailedException;
+
 import com.vividsolutions.jump.feature.Feature;
 import com.vividsolutions.jump.feature.FeatureCollection;
 import com.vividsolutions.jump.feature.FeatureDataset;
@@ -59,7 +61,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * this Matches object
      */
     public Matches(FeatureSchema schema) {
-        dataset = new FeatureDataset(schema);
+        this(schema, Collections.emptyList());
     }
 
     @Override
@@ -78,14 +80,18 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * @param features added to the Matches, each with the max score (1.0)
      */
     public Matches(FeatureSchema schema, List<Feature> features) {
-        this(schema);
+        // We want to ensure that the dataset won't have a ton of ArrayList#grow calls
+        // So we initialize the dataset with all the data
+        this.dataset = new FeatureDataset(features.size(), schema);
+        this.scores = new double[features.size()];
+
         for (Feature match : features) {
             add(match, 1);
         }
     }
 
     private final FeatureDataset dataset;
-    private final List<Double> scores = new ArrayList<>();
+    private double[] scores = new double[0];
 
     /**
      * This method is not supported, because added features need to be associated
@@ -94,7 +100,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * @see #add(Feature, double)
      */
     @Override
-	public void add(Feature feature) {
+    public void add(Feature feature) {
         throw new UnsupportedOperationException("Use #add(feature, score) instead");
     }
 
@@ -103,7 +109,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * with a score. Use #add(Feature, double) instead.
      */
     @Override
-	public void addAll(Collection<? extends Feature> features) {
+    public void addAll(Collection<? extends Feature> features) {
         throw new UnsupportedOperationException("Use #add(feature, score) instead");
     }
 
@@ -122,7 +128,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * have matches removed.
      */
     @Override
-	public Collection<Feature> remove(Envelope envelope) {
+    public Collection<Feature> remove(Envelope envelope) {
         //If we decide to implement this, remember to remove the corresponding
         //score. [Jon Aquino]
         throw new UnsupportedOperationException();
@@ -133,7 +139,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * have matches removed.
      */
     @Override
-	public void clear() {
+    public void clear() {
         //If we decide to implement this, remember to remove the corresponding
         //score. [Jon Aquino]
         throw new UnsupportedOperationException();
@@ -162,7 +168,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * have matches removed.
      */
     @Override
-	public void removeAll(Collection<Feature> features) {
+    public void removeAll(Collection<Feature> features) {
         //If we decide to implement this, remember to remove the corresponding
         //score. [Jon Aquino]
         throw new UnsupportedOperationException();
@@ -174,7 +180,7 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * @param feature a feature to remove
      */
     @Override
-	public void remove(Feature feature) {
+    public void remove(Feature feature) {
         //If we decide to implement this, remember to remove the corresponding
         //score. [Jon Aquino]
         throw new UnsupportedOperationException();
@@ -185,16 +191,28 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * @param score the confidence of the match, ranging from 0 to 1
      */
     public void add(Feature feature, double score) {
-        Assert.isTrue(0 <= score && score <= 1, "Score = " + score);
+        // We want to avoid the string concatenation here, if we don't need it.
+        // It is *very* expensive when run with large datasets.
+        // This used to be an Assert.isTrue statement
+        if (0 > score || score > 1) {
+            throw new AssertionFailedException("Score = " + score);
+        }
         if (score == 0) {
             return;
         }
-        scores.add(score);
+        scoreAdd(dataset.size(), score);
         dataset.add(feature);
         if (score > topScore) {
             topScore = score;
             topMatch = feature;
         }
+    }
+
+    private void scoreAdd(int index, double score) {
+        if (this.scores.length < index + 1) {
+            this.scores = Arrays.copyOf(this.scores, index + 1);
+        }
+        this.scores[index] = score;
     }
 
     private Feature topMatch;
@@ -217,26 +235,26 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
      * @return the confidence of the ith match
      */
     public double getScore(int i) {
-        return scores.get(i);
+        return scores[i];
     }
 
     @Override
-	public FeatureSchema getFeatureSchema() {
+    public FeatureSchema getFeatureSchema() {
         return dataset.getFeatureSchema();
     }
 
     @Override
-	public Envelope getEnvelope() {
+    public Envelope getEnvelope() {
         return dataset.getEnvelope();
     }
 
     @Override
-	public int size() {
+    public int size() {
         return dataset.size();
     }
 
     @Override
-	public boolean isEmpty() {
+    public boolean isEmpty() {
         return dataset.isEmpty();
     }
 
@@ -245,17 +263,17 @@ public class Matches extends AbstractMap<Feature, Double> implements FeatureColl
     }
 
     @Override
-	public List<Feature> getFeatures() {
+    public List<Feature> getFeatures() {
         return dataset.getFeatures();
     }
 
     @Override
-	public Iterator<Feature> iterator() {
+    public Iterator<Feature> iterator() {
         return dataset.iterator();
     }
 
     @Override
-	public List<Feature> query(Envelope envelope) {
+    public List<Feature> query(Envelope envelope) {
         return dataset.query(envelope);
     }
 }

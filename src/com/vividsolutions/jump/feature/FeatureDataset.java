@@ -60,6 +60,16 @@ public class FeatureDataset implements FeatureCollection {
     }
 
     /**
+     * Creates a FeatureDataset, with an initial list size for features
+     * @param newFeatures The expected size of the features
+     * @param featureSchema the types of the attributes of the features in this collection
+     */
+    public FeatureDataset(int newFeatures, FeatureSchema featureSchema) {
+        features = new ArrayList<>(newFeatures);
+        this.featureSchema = featureSchema;
+    }
+
+    /**
      * Creates a FeatureDataset.
      * @param featureSchema the types of the attributes of the features in this collection
      */
