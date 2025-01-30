@@ -14,7 +14,7 @@ import org.openstreetmap.josm.gui.layer.OsmDataLayer;
 import com.vividsolutions.jcs.conflate.polygonmatch.FCMatchFinder;
 
 /**
- * Result of the configuration {@Link SettingsDialog}.
+ * Result of the configuration {@link org.openstreetmap.josm.plugins.conflation.config.SettingsDialog}.
  * @author joshdoe
  */
 public class SimpleMatchSettings {

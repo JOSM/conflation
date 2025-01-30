@@ -12,6 +12,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import javax.swing.JMenuItem;
@@ -159,20 +160,20 @@ public class ParsedTextArea extends JosmTextArea {
         JPopupMenu popup = (JPopupMenu) popupMenuItem.getParent();
         if ((text != null) && !text.isEmpty()) {
             Point textArealocation = getLocationOnScreen();
-            Rectangle positionRect;
+            Rectangle2D positionRect;
             try {
-                positionRect = modelToView(position);
+                positionRect = modelToView2D(position);
             } catch (BadLocationException e) {
                 positionRect = new Rectangle(0, 0, getSize().width, getSize().height);
             }
             popupMenuItem.setText(text);
             repackPopupMenuWithoutFlicker(popup);
             if (above) {
-                popup.setLocation(textArealocation.x + positionRect.x,
-                        textArealocation.y + positionRect.y - positionRect.height - popup.getHeight());
+                popup.setLocation(textArealocation.x + (int)positionRect.getX(),
+                        textArealocation.y + (int)positionRect.getY() - (int)positionRect.getHeight() - popup.getHeight());
             } else {
-                popup.setLocation(textArealocation.x + positionRect.x,
-                        textArealocation.y + positionRect.y + positionRect.height + 10);
+                popup.setLocation(textArealocation.x + (int)positionRect.getX(),
+                        textArealocation.y + (int)positionRect.getY() + (int)positionRect.getHeight() + 10);
             }
             popup.setVisible(true);
         } else {

@@ -55,7 +55,7 @@ public final class MatchesComputation {
         allPrimitives.addAll(subPrimitives);
 
         AbstractMap.SimpleEntry<FeatureCollection,HashMap<OsmPrimitive, Throwable>>
-            allFeaturesAndErrors = createFeatureCollection(allPrimitives, monitor);
+            allFeaturesAndErrors = createFeatureCollection(allPrimitives/*, monitor*/);
 
         FeatureCollection allFeatures = allFeaturesAndErrors.getKey();
         HashMap<OsmPrimitive, Throwable> allErrors = allFeaturesAndErrors.getValue();
@@ -141,7 +141,7 @@ public final class MatchesComputation {
     }
 
     private static AbstractMap.SimpleEntry<FeatureCollection,HashMap<OsmPrimitive, Throwable>>
-        createFeatureCollection(Collection<OsmPrimitive> prims, ProgressMonitor monitor)
+        createFeatureCollection(Collection<OsmPrimitive> prims/*, ProgressMonitor monitor*/)
     {
         FeatureDataset dataset = new FeatureDataset(createSchema(prims));
         HashMap<OsmPrimitive, Throwable> errorset = new HashMap<OsmPrimitive, Throwable>();

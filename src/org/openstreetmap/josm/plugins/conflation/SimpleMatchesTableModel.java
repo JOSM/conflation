@@ -78,6 +78,7 @@ class SimpleMatchesTableModel extends AbstractTableModel implements SimpleMatchL
     }
 
     /**
+     * Return list of matches
      * @return the matches
      */
     public SimpleMatchList getMatches() {
@@ -85,6 +86,7 @@ class SimpleMatchesTableModel extends AbstractTableModel implements SimpleMatchL
     }
 
     /**
+     * Set matches
      * @param matches the matches to set
      */
     public void setMatches(SimpleMatchList matches, SimpleMatchSettings settings) {

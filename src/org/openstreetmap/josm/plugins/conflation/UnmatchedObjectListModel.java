@@ -114,6 +114,7 @@ public class UnmatchedObjectListModel extends AbstractListModel<OsmPrimitive> {
     }
 
     /**
+     * Begin update process
      * @see DataSet#beginUpdate()
      */
     public void endUpdate() {

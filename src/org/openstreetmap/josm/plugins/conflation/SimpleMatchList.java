@@ -15,7 +15,7 @@ import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.OsmPrimitive;
 
 /**
- *  Holds a list of {@see Match}es and provides convenience functions.
+ *  Holds a list of {@link SimpleMatch}es and provides convenience functions.
  */
 public class SimpleMatchList implements Iterable<SimpleMatch> {
     private final CopyOnWriteArrayList<SimpleMatchListListener> listeners = new CopyOnWriteArrayList<>();
