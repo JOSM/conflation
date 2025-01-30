@@ -6,7 +6,7 @@
     <artifactId>plugin-root</artifactId>
     <version>SNAPSHOT</version>
   </parent>
-  <artifactId>auto-tools</artifactId>
+  <artifactId>conflation</artifactId>
   <url>${plugin.link}</url>
   <developers>
     <developer>
