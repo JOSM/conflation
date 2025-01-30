@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.openstreetmap.josm.plugins</groupId>
+    <artifactId>plugin-root</artifactId>
+    <version>SNAPSHOT</version>
+  </parent>
+  <artifactId>auto-tools</artifactId>
+  <url>${plugin.link}</url>
+  <developers>
+    <developer>
+      <name>Josh Doe</name>
+    </developer>
+  </developers>
+  <properties>
+    <plugin.src.dir>src</plugin.src.dir>
+    <plugin.main.version>19044</plugin.main.version>
+    <plugin.author>Josh Doe</plugin.author>
+    <plugin.class>org.openstreetmap.josm.plugins.conflation.ConflationPlugin</plugin.class>
+    <plugin.description>Tool for conflating data (matching and merging).</plugin.description>
+    <plugin.icon>images/dialogs/conflation.png</plugin.icon>
+    <plugin.link>https://wiki.openstreetmap.org/wiki/JOSM/Plugins/Conflation</plugin.link>
+    <plugin.requires>jts;utilsplugin2</plugin.requires>
+    <plugin.canloadatruntime>true</plugin.canloadatruntime>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.openstreetmap.josm.plugins</groupId>
+      <artifactId>jts</artifactId>
+      <version>SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.openstreetmap.josm.plugins</groupId>
+      <artifactId>utilsplugin2</artifactId>
+      <version>SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Plugin-Link>${plugin.link}</Plugin-Link>
+              <Plugin-Icon>${plugin.icon}</Plugin-Icon>
+              <Plugin-Canloadatruntime>${plugin.canloadatruntime}</Plugin-Canloadatruntime>
+              <Plugin-Requires>${plugin.requires}</Plugin-Requires>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
