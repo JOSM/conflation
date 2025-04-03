@@ -476,7 +476,7 @@ public class SettingsDialog extends ExtendedDialog {
         totalRelations += numRelations;
         if (totalRelations != 0) {
             JOptionPane.showMessageDialog(MainApplication.getMainFrame(),
-                    tr("Relations are not supported yet, please do not select them."), tr("Error"),
+                    tr("Relations are not supported."), tr("Error"),
                     JOptionPane.ERROR_MESSAGE);
         }
         updateFreezeButtons();
