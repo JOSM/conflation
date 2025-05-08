@@ -101,7 +101,8 @@ public class FeatureSchema implements Cloneable {
     }
 
     /**
-     *@param  geometry  true if the attribute is a Geometry
+     * @param attributeName The name of the attribute
+     * @param attributeType The type of the attribute
      */
     public void addAttribute(String attributeName, AttributeType attributeType) {
         if (AttributeType.GEOMETRY == attributeType) {

@@ -40,7 +40,7 @@ import org.locationtech.jts.geom.Geometry;
 
 /**
  * A type for the attributes of a feature.
- * @see FeatureSchema.
+ * @see FeatureSchema#attributeTypes
  */
 public class AttributeType {
     private static Map<String, AttributeType> nameToAttributeTypeMap = new HashMap<>();
@@ -82,9 +82,9 @@ public class AttributeType {
 
     /**
      * Converts a type name to an AttributeType.
-     * @param typename the name of the AttributeType to retrieve
+     * @param name the name of the AttributeType to retrieve
      * @return the corresponding AttributeType
-     * @throws InvalidAttributeTypeException if the type name is unrecognized
+     * @throws IllegalArgumentException if the type name is unrecognized
      */
     public final static AttributeType toAttributeType(String name) {
         AttributeType type = nameToAttributeTypeMap.get(name);

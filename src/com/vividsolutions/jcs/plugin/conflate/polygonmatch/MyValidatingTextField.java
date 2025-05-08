@@ -9,8 +9,9 @@ import com.vividsolutions.jump.workbench.ui.ValidatingTextField;
 
 /**
  * Prevents the user from entering invalid data.
- * @ eprecated Use ValidatingTextField instead
+ * @deprecated Use ValidatingTextField instead
  */
+@Deprecated
 public class MyValidatingTextField extends ValidatingTextField {
 
     public MyValidatingTextField(
